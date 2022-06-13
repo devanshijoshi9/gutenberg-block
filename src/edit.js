@@ -11,7 +11,7 @@ import { __ } from '@wordpress/i18n';
  *
  * @see https://developer.wordpress.org/block-editor/packages/packages-block-editor/#useBlockProps
  */
-import { useBlockProps } from '@wordpress/block-editor';
+import { useBlockProps, RichText } from '@wordpress/block-editor';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -29,10 +29,22 @@ import './editor.scss';
  *
  * @return {WPElement} Element to render.
  */
-export default function Edit() {
+export default function Edit( { attributes, setAttributes } ) {
+
+	const blockProps = useBlockProps();
+
+	const onChangeContent = ( newContent ) => {
+		setAttributes( { content: newContent } )
+	}
+
 	return (
-		<p {...useBlockProps()}>
-			{__('Gutenberg Block – hello from the editor!', 'gutenberg-block')}
-		</p>
+		<RichText
+			{ ...blockProps }
+			tagName="p"
+			onChange={ onChangeContent }
+			allowedFormats={ [ 'core/bold', 'core/italic' ] }
+			value={ attributes.content }
+			placeholder={ __( 'Write your text...' ) }
+		/>	 
 	);
 }

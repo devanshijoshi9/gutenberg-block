@@ -7,6 +7,16 @@
   "category": "widgets",
   "icon": "smiley",
   "description": "Example",
+  "attributes": {
+    "content": {
+      "type": "string",
+      "source": "html",
+      "selector": "p"
+    }
+  },
+  "keywords": [
+    "custom"
+  ],
   "supports": {
     "html": false
   },
