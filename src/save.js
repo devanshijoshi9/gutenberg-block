@@ -22,15 +22,15 @@ import { useBlockProps, RichText } from '@wordpress/block-editor';
  *
  * @return {WPElement} Element to render.
  */
-export default function save( {attributes }) {
-
+ export default function save( { attributes } ) {
 	const blockProps = useBlockProps.save();
-
+	const { content, align } = attributes;
 	return (
-		<RichText.content
-		{ ...blockProps }
-		tagName = "p"
-		value = {attributes.content}
+		<RichText.Content 
+			{ ...blockProps } 
+			tagName="p" 
+			value={ content } 
+			style={ { textAlign: align } }
 		/>
 	);
 }

@@ -12,6 +12,10 @@
       "type": "string",
       "source": "html",
       "selector": "p"
+    },
+    "align": {
+      "type": "string",
+      "default": "none"
     }
   },
   "keywords": [
