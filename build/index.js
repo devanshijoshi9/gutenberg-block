@@ -73,7 +73,31 @@ function Edit(_ref) {
     });
   };
 
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.BlockControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.AlignmentControl, {
+  const onChangeTextColor = newTextColor => {
+    setAttributes({
+      textColor: newTextColor
+    });
+  };
+
+  const onChangeBackgroundColor = newBackgroundColor => {
+    setAttributes({
+      backgroundColor: newBackgroundColor
+    });
+  };
+
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.InspectorControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.PanelColorSettings, {
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Color settings', 'gutenberg-block'),
+    initialOpen: false,
+    colorSettings: [{
+      value: attributes.textColor,
+      onChange: onChangeTextColor,
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Text color', 'gutenberg-block')
+    }, {
+      value: attributes.backgroundColor,
+      onChange: onChangeBackgroundColor,
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Background color', 'gutenberg-block')
+    }]
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.BlockControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.AlignmentControl, {
     value: attributes.align,
     onChange: onChangeAlign
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.RichText, (0,_babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, blockProps, {
@@ -81,9 +105,11 @@ function Edit(_ref) {
     onChange: onChangeContent,
     allowedFormats: ['core/bold', 'core/italic'],
     value: attributes.content,
-    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Write your text...'),
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Write your text...', 'gutenberg-block'),
     style: {
-      textAlign: attributes.align
+      textAlign: attributes.align,
+      backgroundColor: attributes.backgroundColor,
+      color: attributes.textColor
     }
   })));
 }
@@ -196,13 +222,17 @@ function save(_ref) {
   const blockProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.useBlockProps.save();
   const {
     content,
-    align
+    align,
+    backgroundColor,
+    textColor
   } = attributes;
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.RichText.Content, (0,_babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, blockProps, {
     tagName: "p",
     value: content,
     style: {
-      textAlign: align
+      textAlign: align,
+      backgroundColor: backgroundColor,
+      color: textColor
     }
   }));
 }
@@ -308,7 +338,7 @@ function _extends() {
   \************************/
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"gutenberg-block/gutenberg-block","version":"0.1.0","title":"Gutenberg Block","category":"widgets","icon":"smiley","description":"Example","attributes":{"content":{"type":"string","source":"html","selector":"p"},"align":{"type":"string","default":"none"}},"keywords":["custom"],"supports":{"html":false},"textdomain":"gutenberg-block","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css"}');
+module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"gutenberg-block/gutenberg-block","version":"0.1.0","title":"Gutenberg Block","category":"widgets","icon":"smiley","description":"Example","attributes":{"content":{"type":"string","source":"html","selector":"p"},"align":{"type":"string","default":"none"},"backgroundColor":{"type":"string"},"textColor":{"type":"string"}},"keywords":["custom"],"supports":{"html":false},"textdomain":"gutenberg-block","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css"}');
 
 /***/ })
 

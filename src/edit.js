@@ -15,7 +15,9 @@ import { __ } from '@wordpress/i18n';
 	useBlockProps, 
 	RichText, 
 	AlignmentControl, 
-	BlockControls 
+	BlockControls,
+	InspectorControls,
+	PanelColorSettings
 } from '@wordpress/block-editor';
 
 /**
@@ -48,8 +50,34 @@ export default function Edit( { attributes, setAttributes } ) {
 		} )
 	}
 
+	const onChangeTextColor = (newTextColor) => {
+		setAttributes( { textColor: newTextColor } )
+	}
+
+	const onChangeBackgroundColor = ( newBackgroundColor ) => {
+		setAttributes( { backgroundColor: newBackgroundColor } )
+	}
+
 	return (
 		<>
+			<InspectorControls>
+				<PanelColorSettings 
+					title={ __( 'Color settings', 'gutenberg-block' ) }
+					initialOpen={ false }
+					colorSettings={ [
+						{
+						  value: attributes.textColor,
+						  onChange: onChangeTextColor,
+						  label: __( 'Text color', 'gutenberg-block' ),
+						},
+						{
+						  value: attributes.backgroundColor,
+						  onChange: onChangeBackgroundColor,
+						  label: __( 'Background color', 'gutenberg-block' ),
+						}
+					] }
+				/>
+			</InspectorControls>
 			<BlockControls>
 				<AlignmentControl
 					value={ attributes.align }
@@ -62,8 +90,8 @@ export default function Edit( { attributes, setAttributes } ) {
 				onChange={ onChangeContent }
 				allowedFormats={ [ 'core/bold', 'core/italic' ] }
 				value={ attributes.content }
-				placeholder={ __( 'Write your text...' ) }
-				style={ { textAlign: attributes.align } }
+				placeholder={ __( 'Write your text...', 'gutenberg-block' ) }
+				style={ { textAlign: attributes.align, backgroundColor: attributes.backgroundColor, color: attributes.textColor } }
 			/>
 		</>	 
 	);
