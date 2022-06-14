@@ -22,6 +22,18 @@
 		},	 
 		"textColor": {
 			"type": "string"
+		},
+		"affiliateLink": {
+			"type": "string",
+			"default": ""
+		},
+		"linkLabel": {
+			"type": "string",
+			"default": "Check it out!"
+		},
+		"hasLinkNofollow": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"keywords": ["custom"],

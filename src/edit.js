@@ -20,6 +20,14 @@ import { __ } from '@wordpress/i18n';
 	PanelColorSettings
 } from '@wordpress/block-editor';
 
+import {
+	TextControl,
+	PanelBody,
+	PanelRow,
+	ToggleControl,
+	ExternalLink
+} from '@wordpress/components';
+
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * Those files can contain any CSS code that gets applied to the editor.
@@ -58,6 +66,18 @@ export default function Edit( { attributes, setAttributes } ) {
 		setAttributes( { backgroundColor: newBackgroundColor } )
 	}
 
+	const onChangeAffiliateLink = ( newAffiliateLink ) => {
+		setAttributes( { affiliateLink: newAffiliateLink === undefined ? '' : newAffiliateLink } )
+	}
+	
+	const onChangeLinkLabel = ( newLinkLabel ) => {
+		setAttributes( { linkLabel: newLinkLabel === undefined ? '' : newLinkLabel } )
+	}
+	
+	const toggleNofollow = () => {
+		setAttributes( { hasLinkNofollow: ! attributes.hasLinkNofollow } )
+	}
+
 	return (
 		<>
 			<InspectorControls>
@@ -77,6 +97,45 @@ export default function Edit( { attributes, setAttributes } ) {
 						}
 					] }
 				/>
+				<PanelBody 
+					title={ __( 'Link Settings', 'gutenberg-block' )}
+					initialOpen={true}
+				>
+				<PanelRow>
+					<fieldset>
+						<TextControl
+							label={__( 'Affiliate link', 'gutenberg-block' )}
+							value={ attributes.affiliateLink }
+							onChange={ onChangeAffiliateLink }
+							help={ __( 'Add your affiliate link', 'gutenberg-block' )}
+						/>
+					</fieldset>
+				</PanelRow>
+				<PanelRow>
+					<fieldset>
+						<ToggleControl
+							label="Add rel = nofollow"
+							help={
+								attributes.hasLinkNofollow
+									? 'Has rel nofollow.'
+									: 'No rel nofollow.'
+							}
+							checked={ attributes.hasLinkNofollow }
+							onChange={ toggleNofollow }
+						/>
+					</fieldset>
+				</PanelRow>
+				<PanelRow>
+					<fieldset>
+						<TextControl
+							label={__( 'Link label', 'gutenberg-block' )}
+							value={ attributes.linkLabel }
+							onChange={ onChangeLinkLabel }
+							help={ __( 'Add link label', 'gutenberg-block' )}
+						/>
+					</fieldset>
+				</PanelRow>
+				</PanelBody>
 			</InspectorControls>
 			<BlockControls>
 				<AlignmentControl
@@ -93,6 +152,13 @@ export default function Edit( { attributes, setAttributes } ) {
 				placeholder={ __( 'Write your text...', 'gutenberg-block' ) }
 				style={ { textAlign: attributes.align, backgroundColor: attributes.backgroundColor, color: attributes.textColor } }
 			/>
+			<ExternalLink 
+				href={ attributes.affiliateLink }
+				className="affiliate-button"
+				rel={ attributes.hasLinkNofollow ? "nofollow" : "" }
+			>
+					{ attributes.linkLabel }
+			</ExternalLink>
 		</>	 
 	);
 }
