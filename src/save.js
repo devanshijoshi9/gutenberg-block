@@ -11,7 +11,7 @@ import { __ } from '@wordpress/i18n';
  *
  * @see https://developer.wordpress.org/block-editor/packages/packages-block-editor/#useBlockProps
  */
-import { useBlockProps } from '@wordpress/block-editor';
+import { useBlockProps, RichText } from '@wordpress/block-editor';
 
 /**
  * The save function defines the way in which the different attributes should
@@ -22,13 +22,25 @@ import { useBlockProps } from '@wordpress/block-editor';
  *
  * @return {WPElement} Element to render.
  */
-export default function save() {
+ export default function save( { attributes } ) {
+	const blockProps = useBlockProps.save();
+	const { content, align, backgroundColor, textColor, affiliateLink, linkLabel, hasLinkNofollow } = attributes;
 	return (
-		<p {...useBlockProps.save()}>
-			{__(
-				'Gutenberg Block – hello from the saved content!',
-				'gutenberg-block'
-			)}
-		</p>
+		<div { ...blockProps }>
+			<RichText.Content 
+				tagName="p" 
+				value={ content } 
+				style={ { textAlign: align, backgroundColor: backgroundColor, color: textColor } }
+			/>
+			<p>
+				<a 
+					href={ affiliateLink }
+					className="affiliate-button"
+					rel={ hasLinkNofollow ? "nofollow" : "noopener noreferrer" }
+				>
+					{ linkLabel }
+				</a>
+			</p>
+		</div>
 	);
 }

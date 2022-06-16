@@ -7,8 +7,58 @@
 	"category": "widgets",
 	"icon": "smiley",
 	"description": "Example",
+	"attributes": {
+		"content": {
+			"type": "string",
+			"source": "html",
+			"selector": "p"
+		},
+		"align": {
+			"type": "string",
+			"default": "none"
+		},
+		"backgroundColor": {
+			"type": "string"
+		},	 
+		"textColor": {
+			"type": "string"
+		},
+		"affiliateLink": {
+			"type": "string",
+			"default": ""
+		},
+		"linkLabel": {
+			"type": "string",
+			"default": "Check it out!"
+		},
+		"hasLinkNofollow": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"keywords": ["custom"],
 	"supports": {
-		"html": false
+		"html": false,
+		"anchor": true,
+		"align": [ "left", "right", "full" ],
+		"alignWide": false,
+		"color": {
+			"background": false,
+			"gradients": true,
+			"link": true
+		},
+		"spacing": {
+			"margin": true,
+			"padding": true,
+			"blockGap": true  
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		},
+		"multiple": false,
+		"reusable": false,
+		"lock": false
 	},
 	"textdomain": "gutenberg-block",
 	"editorScript": "file:./index.js",
