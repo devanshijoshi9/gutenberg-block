@@ -25,10 +25,13 @@ import {
 	PanelBody,
 	PanelRow,
 	ToggleControl,
-	ExternalLink
+	ExternalLink,
+	SelectControl
 } from '@wordpress/components';
 
 import { useSelect } from '@wordpress/data';
+
+import { useState } from '@wordpress/element';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -49,16 +52,6 @@ import './editor.scss';
 export default function Edit( { attributes, setAttributes } ) {
 
 	const blockProps = useBlockProps();
-
-	const posts = useSelect( ( select ) => {
-		return select( 'core' ).getEntityRecords( 'postType', 'post', {
-			per_page: 1,
-		} );
-	}, [] );
-
-	if ( ! posts ) {
-		return null;
-	}
 
 	const onChangeContent = ( newContent ) => {
 		setAttributes( { content: newContent } )
@@ -155,32 +148,26 @@ export default function Edit( { attributes, setAttributes } ) {
 					onChange={ onChangeAlign }
 				/>
 			</BlockControls>
-			<RichText
-				{ ...blockProps }
-				tagName="p"
-				onChange={ onChangeContent }
-				allowedFormats={ [ 'core/bold', 'core/italic' ] }
-				value={ attributes.content }
-				placeholder={ __( 'Write your text...', 'gutenberg-block' ) }
-				style={ { textAlign: attributes.align, backgroundColor: attributes.backgroundColor, color: attributes.textColor } }
-			/>
-			{ !! posts.length && (
-				<h3
-					style={ {
-						backgroundColor: attributes.backgroundColor,
-						color: attributes.textColor,
-					} }
+			<div>
+				<RichText
+					{ ...blockProps }
+					tagName="p"
+					onChange={ onChangeContent }
+					allowedFormats={ [ 'core/bold', 'core/italic' ] }
+					value={ attributes.content }
+					placeholder={ __( 'Write your text...', 'gutenberg-block' ) }
+					style={ { textAlign: attributes.align, backgroundColor: attributes.backgroundColor, color: attributes.textColor } }
+				/>
+
+				<ExternalLink 
+					href={ attributes.postLink }
+					className="post-link"
+					style={ { textAlign: attributes.align, backgroundColor: attributes.backgroundColor, color: attributes.textColor } }
+					rel={ attributes.hasLinkNofollow ? "nofollow" : "" }
 				>
-					{ posts[ 0 ].title.rendered }
-				</h3>
-			) }
-			<ExternalLink 
-				href={ attributes.postLink }
-				className="post-link"
-				rel={ attributes.hasLinkNofollow ? "nofollow" : "" }
-			>
-					{ attributes.linkLabel }
-			</ExternalLink>
+						{ attributes.linkLabel }
+				</ExternalLink>
+			</div>
 		</>	 
 	);
 }

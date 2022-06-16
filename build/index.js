@@ -43,6 +43,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * Those files can contain any CSS code that gets applied to the editor.
@@ -66,15 +67,6 @@ function Edit(_ref) {
     setAttributes
   } = _ref;
   const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.useBlockProps)();
-  const posts = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_5__.useSelect)(select => {
-    return select('core').getEntityRecords('postType', 'post', {
-      per_page: 1
-    });
-  }, []);
-
-  if (!posts) {
-    return null;
-  }
 
   const onChangeContent = newContent => {
     setAttributes({
@@ -151,7 +143,7 @@ function Edit(_ref) {
   }))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.BlockControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.AlignmentControl, {
     value: attributes.align,
     onChange: onChangeAlign
-  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.RichText, (0,_babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, blockProps, {
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.RichText, (0,_babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, blockProps, {
     tagName: "p",
     onChange: onChangeContent,
     allowedFormats: ['core/bold', 'core/italic'],
@@ -162,16 +154,16 @@ function Edit(_ref) {
       backgroundColor: attributes.backgroundColor,
       color: attributes.textColor
     }
-  })), !!posts.length && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("h3", {
-    style: {
-      backgroundColor: attributes.backgroundColor,
-      color: attributes.textColor
-    }
-  }, posts[0].title.rendered), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.ExternalLink, {
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.ExternalLink, {
     href: attributes.postLink,
     className: "post-link",
+    style: {
+      textAlign: attributes.align,
+      backgroundColor: attributes.backgroundColor,
+      color: attributes.textColor
+    },
     rel: attributes.hasLinkNofollow ? "nofollow" : ""
-  }, attributes.linkLabel));
+  }, attributes.linkLabel)));
 }
 
 /***/ }),
