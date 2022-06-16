@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name:       Gutenberg Block
  * Description:       Example
@@ -11,8 +12,35 @@
  * Text Domain:       gutenberg-block
  * Domain Path:       block
  *
- * @package           gutenberg-block
+ * @package gutenberg-block
  */
+
+function render_dev_dynamic_block($attributes, $content)
+{
+	// var_dump($attributes);
+	$recent_posts = wp_get_recent_posts(
+		array(
+			'numberposts' => 1,
+			'post_status' => 'publish',
+		)
+	);
+
+	if ( count( $recent_posts ) === 0 ) {
+		return __( 'No posts', 'learn-gutenberg' );
+	}
+
+	$post    = $recent_posts[0];
+	$post_id = $post['ID'];
+
+	$wrapper_attributes = get_block_wrapper_attributes();
+
+	return sprintf(
+		'<div %1$s><a href="%2$s">%3$s</a></div>',
+		$wrapper_attributes,
+		esc_url( get_permalink( $post_id ) ),
+		esc_html( get_the_title( $post_id ) )
+	);
+}
 
 /**
  * Registers the block using the metadata loaded from the `block.json` file.
@@ -21,7 +49,13 @@
  *
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
-function gutenberg_block_gutenberg_block_block_init() {
-	register_block_type( __DIR__ . '/build' );
+function gutenberg_block_gutenberg_block_block_init()
+{
+	register_block_type(
+		__DIR__ . '/build',
+		array(
+			'render_callback' => 'render_dev_dynamic_block',
+		)
+	);
 }
-add_action( 'init', 'gutenberg_block_gutenberg_block_block_init' );
+add_action('init', 'gutenberg_block_gutenberg_block_block_init');

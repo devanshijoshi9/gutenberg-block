@@ -29,9 +29,11 @@ import {
 	SelectControl
 } from '@wordpress/components';
 
-import { useSelect } from '@wordpress/data';
+import ServerSideRender from '@wordpress/server-side-render';
 
-import { useState } from '@wordpress/element';
+import { useSelect } from '@wordpress/data';
+import apiFetch from '@wordpress/api-fetch';
+import { useState, useEffect } from '@wordpress/element';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -71,16 +73,51 @@ export default function Edit( { attributes, setAttributes } ) {
 		setAttributes( { backgroundColor: newBackgroundColor } )
 	}
 
-	const onChangePostLink = ( newPostLink ) => {
-		setAttributes( { postLink: newPostLink === undefined ? '' : newPostLink } )
+	const allposts = useSelect( ( select ) => {
+		return select( 'core' ).getEntityRecords( 'postType', 'post' );
+	}, [] );
+
+	const [selectedPost, newSelectedPost] = useState(1)
+	const [post, setPost ]                = useState('')
+	const [ error, setError ]             = useState( null );
+    const [ isLoaded, setIsLoaded ]       = useState( false );
+
+	// options for SelectControl
+	var options = [];
+		
+	// if posts found
+	if( allposts ) {
+		options.push( { value: 0, label: 'Select Post' } );
+		allposts.forEach((post) => {
+			options.push({value:post.id, label:post.title.rendered});
+		});
+	} else {
+		options.push( { value: 0, label: 'Loading...' } )
 	}
-	
-	const onChangeLinkLabel = ( newLinkLabel ) => {
-		setAttributes( { linkLabel: newLinkLabel === undefined ? '' : newLinkLabel } )
+
+	const onChangePost = (changesPost) => {
+		console.log(changesPost)
+		newSelectedPost(changesPost)
+
+		apiFetch( { path: `/wp/v2/posts/${ changesPost }` } ).then( ( posts ) => {
+			console.log( posts );
+			setPost( posts );
+		} );
 	}
-	
-	const toggleNofollow = () => {
-		setAttributes( { hasLinkNofollow: ! attributes.hasLinkNofollow } )
+
+	if ( selectedPost !== "" ) {
+		useEffect( () => {
+			apiFetch( { path: `/wp/v2/posts/${ selectedPost }` } ).then(
+				( result ) => {
+					setIsLoaded( true );
+					setPost( result );
+				},
+				( error ) => {
+					setIsLoaded( true );
+					setError( error );
+				}
+			);
+		}, selectedPost );
 	}
 
 	return (
@@ -102,45 +139,17 @@ export default function Edit( { attributes, setAttributes } ) {
 						}
 					] }
 				/>
-				<PanelBody 
-					title={ __( 'Link Settings', 'gutenberg-block' )}
-					initialOpen={true}
-				>
-				<PanelRow>
-					<fieldset>
-						<TextControl
-							label={__( 'Affiliate link', 'gutenberg-block' )}
-							value={ attributes.postLink }
-							onChange={ onChangePostLink }
-							help={ __( 'Add your affiliate link', 'gutenberg-block' )}
-						/>
-					</fieldset>
-				</PanelRow>
-				<PanelRow>
-					<fieldset>
-						<ToggleControl
-							label="Add rel = nofollow"
-							help={
-								attributes.hasLinkNofollow
-									? 'Has rel nofollow.'
-									: 'No rel nofollow.'
-							}
-							checked={ attributes.hasLinkNofollow }
-							onChange={ toggleNofollow }
-						/>
-					</fieldset>
-				</PanelRow>
-				<PanelRow>
-					<fieldset>
-						<TextControl
-							label={__( 'Link label', 'gutenberg-block' )}
-							value={ attributes.linkLabel }
-							onChange={ onChangeLinkLabel }
-							help={ __( 'Add link label', 'gutenberg-block' )}
-						/>
-					</fieldset>
-				</PanelRow>
+				<PanelBody title={ __( 'Post Settings', 'gutenberg-block' ) }>
+
+					<SelectControl
+						label="Select Post"
+						value={ selectedPost }
+						options={ options }
+						onChange={ onChangePost }
+					/>
+
 				</PanelBody>
+
 			</InspectorControls>
 			<BlockControls>
 				<AlignmentControl
@@ -148,25 +157,27 @@ export default function Edit( { attributes, setAttributes } ) {
 					onChange={ onChangeAlign }
 				/>
 			</BlockControls>
-			<div>
+			<div {...useBlockProps()}>
 				<RichText
-					{ ...blockProps }
 					tagName="p"
 					onChange={ onChangeContent }
 					allowedFormats={ [ 'core/bold', 'core/italic' ] }
 					value={ attributes.content }
-					placeholder={ __( 'Write your text...', 'gutenberg-block' ) }
+					placeholder={ __( 'Write your text', 'gutenberg-block' ) }
 					style={ { textAlign: attributes.align, backgroundColor: attributes.backgroundColor, color: attributes.textColor } }
 				/>
+				{/* { error && __('Error:') && error.message }
+				{ ! isLoaded && __('Loading Post') } */}
+				{ post && (
+					<a href={ post.title.rendered }>
+						{ post.title.rendered }
+					</a>
+				) }
 
-				<ExternalLink 
-					href={ attributes.postLink }
-					className="post-link"
-					style={ { textAlign: attributes.align, backgroundColor: attributes.backgroundColor, color: attributes.textColor } }
-					rel={ attributes.hasLinkNofollow ? "nofollow" : "" }
-				>
-						{ attributes.linkLabel }
-				</ExternalLink>
+				<ServerSideRender
+					block="devanshi/dynamic-block-example"
+					attributes={ attributes }
+				/>
 			</div>
 		</>	 
 	);
