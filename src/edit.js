@@ -28,6 +28,8 @@ import {
 	ExternalLink
 } from '@wordpress/components';
 
+import { useSelect } from '@wordpress/data';
+
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * Those files can contain any CSS code that gets applied to the editor.
@@ -48,6 +50,16 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const blockProps = useBlockProps();
 
+	const posts = useSelect( ( select ) => {
+		return select( 'core' ).getEntityRecords( 'postType', 'post', {
+			per_page: 1,
+		} );
+	}, [] );
+
+	if ( ! posts ) {
+		return null;
+	}
+
 	const onChangeContent = ( newContent ) => {
 		setAttributes( { content: newContent } )
 	}
@@ -66,8 +78,8 @@ export default function Edit( { attributes, setAttributes } ) {
 		setAttributes( { backgroundColor: newBackgroundColor } )
 	}
 
-	const onChangeAffiliateLink = ( newAffiliateLink ) => {
-		setAttributes( { affiliateLink: newAffiliateLink === undefined ? '' : newAffiliateLink } )
+	const onChangePostLink = ( newPostLink ) => {
+		setAttributes( { postLink: newPostLink === undefined ? '' : newPostLink } )
 	}
 	
 	const onChangeLinkLabel = ( newLinkLabel ) => {
@@ -105,8 +117,8 @@ export default function Edit( { attributes, setAttributes } ) {
 					<fieldset>
 						<TextControl
 							label={__( 'Affiliate link', 'gutenberg-block' )}
-							value={ attributes.affiliateLink }
-							onChange={ onChangeAffiliateLink }
+							value={ attributes.postLink }
+							onChange={ onChangePostLink }
 							help={ __( 'Add your affiliate link', 'gutenberg-block' )}
 						/>
 					</fieldset>
@@ -152,9 +164,19 @@ export default function Edit( { attributes, setAttributes } ) {
 				placeholder={ __( 'Write your text...', 'gutenberg-block' ) }
 				style={ { textAlign: attributes.align, backgroundColor: attributes.backgroundColor, color: attributes.textColor } }
 			/>
+			{ !! posts.length && (
+				<h3
+					style={ {
+						backgroundColor: attributes.backgroundColor,
+						color: attributes.textColor,
+					} }
+				>
+					{ posts[ 0 ].title.rendered }
+				</h3>
+			) }
 			<ExternalLink 
-				href={ attributes.affiliateLink }
-				className="affiliate-button"
+				href={ attributes.postLink }
+				className="post-link"
 				rel={ attributes.hasLinkNofollow ? "nofollow" : "" }
 			>
 					{ attributes.linkLabel }
