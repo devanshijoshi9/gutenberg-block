@@ -99,7 +99,7 @@ function Edit(_ref) {
   const allposts = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_5__.useSelect)(select => {
     return select('core').getEntityRecords('postType', 'post');
   }, []);
-  const [selectedPost, newSelectedPost] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(1);
+  const [selectedPost, newSelectedPost] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)("all");
   const [post, setPost] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)('');
   const [error, setError] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   const [isLoaded, setIsLoaded] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false); // options for SelectControl
@@ -108,8 +108,8 @@ function Edit(_ref) {
 
   if (allposts) {
     options.push({
-      value: 0,
-      label: 'Select Post'
+      value: 'all',
+      label: 'Select All Post'
     });
     allposts.forEach(post => {
       options.push({
@@ -125,20 +125,16 @@ function Edit(_ref) {
   }
 
   const onChangePost = changesPost => {
-    console.log(changesPost);
     newSelectedPost(changesPost);
-    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_6___default()({
-      path: `/wp/v2/posts/${changesPost}`
-    }).then(posts => {
-      console.log(posts);
-      setPost(posts);
-    });
-  };
 
-  if (selectedPost !== "") {
-    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (changesPost === "all") {
+      console.log(changesPost);
+      setPost(allposts);
+    } else {
+      console.log('else');
+      console.log(changesPost);
       _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_6___default()({
-        path: `/wp/v2/posts/${selectedPost}`
+        path: `/wp/v2/posts/${changesPost}`
       }).then(result => {
         setIsLoaded(true);
         setPost(result);
@@ -146,8 +142,8 @@ function Edit(_ref) {
         setIsLoaded(true);
         setError(error);
       });
-    }, selectedPost);
-  }
+    }
+  };
 
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InspectorControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.PanelColorSettings, {
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Color settings', 'gutenberg-block'),
@@ -182,9 +178,11 @@ function Edit(_ref) {
       backgroundColor: attributes.backgroundColor,
       color: attributes.textColor
     }
-  }), post && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: post.title.rendered
-  }, post.title.rendered), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)((_wordpress_server_side_render__WEBPACK_IMPORTED_MODULE_4___default()), {
+  }), post && Array.isArray(post) && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, post.map(post => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: post.link
+  }, post.title.rendered)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, post.link, post.author)))), error && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Error:') && error.message, !isLoaded && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Loading Post'), post && !Array.isArray(post) && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: post.link
+  }, post.title.rendered), post.author), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)((_wordpress_server_side_render__WEBPACK_IMPORTED_MODULE_4___default()), {
     block: "devanshi/dynamic-block-example",
     attributes: attributes
   })));

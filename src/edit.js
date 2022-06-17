@@ -77,17 +77,17 @@ export default function Edit( { attributes, setAttributes } ) {
 		return select( 'core' ).getEntityRecords( 'postType', 'post' );
 	}, [] );
 
-	const [selectedPost, newSelectedPost] = useState(1)
-	const [post, setPost ]                = useState('')
-	const [ error, setError ]             = useState( null );
-    const [ isLoaded, setIsLoaded ]       = useState( false );
+	const [ selectedPost, newSelectedPost ] = useState("all")
+	const [ post, setPost ]                 = useState('')
+	const [ error, setError ]               = useState( null );
+    const [ isLoaded, setIsLoaded ]         = useState( false );
 
 	// options for SelectControl
 	var options = [];
 		
 	// if posts found
 	if( allposts ) {
-		options.push( { value: 0, label: 'Select Post' } );
+		options.push( { value: 'all', label: 'Select All Post' } );
 		allposts.forEach((post) => {
 			options.push({value:post.id, label:post.title.rendered});
 		});
@@ -96,18 +96,16 @@ export default function Edit( { attributes, setAttributes } ) {
 	}
 
 	const onChangePost = (changesPost) => {
-		console.log(changesPost)
+
 		newSelectedPost(changesPost)
 
-		apiFetch( { path: `/wp/v2/posts/${ changesPost }` } ).then( ( posts ) => {
-			console.log( posts );
-			setPost( posts );
-		} );
-	}
-
-	if ( selectedPost !== "" ) {
-		useEffect( () => {
-			apiFetch( { path: `/wp/v2/posts/${ selectedPost }` } ).then(
+		if( changesPost === "all" ) {
+			console.log(changesPost)
+			setPost(allposts)
+		} else {
+			console.log('else')
+			console.log(changesPost)
+			apiFetch( { path: `/wp/v2/posts/${ changesPost }` } ).then(
 				( result ) => {
 					setIsLoaded( true );
 					setPost( result );
@@ -117,7 +115,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					setError( error );
 				}
 			);
-		}, selectedPost );
+		}
 	}
 
 	return (
@@ -147,7 +145,6 @@ export default function Edit( { attributes, setAttributes } ) {
 						options={ options }
 						onChange={ onChangePost }
 					/>
-
 				</PanelBody>
 
 			</InspectorControls>
@@ -166,13 +163,31 @@ export default function Edit( { attributes, setAttributes } ) {
 					placeholder={ __( 'Write your text', 'gutenberg-block' ) }
 					style={ { textAlign: attributes.align, backgroundColor: attributes.backgroundColor, color: attributes.textColor } }
 				/>
-				{/* { error && __('Error:') && error.message }
-				{ ! isLoaded && __('Loading Post') } */}
-				{ post && (
-					<a href={ post.title.rendered }>
-						{ post.title.rendered }
-					</a>
+				{ post && Array.isArray(post) && (
+					<div>
+						{post.map(post => (  
+							<ul>
+								<li>  
+									<a href={ post.link }>{ post.title.rendered }</a>
+								</li>
+								<li>
+									{ post.link }
+									{ post.author }
+								</li>
+							</ul>
+						))}
+					</div>
 				) }
+				{ error && __('Error:') && error.message }
+				{ ! isLoaded && __('Loading Post') }
+				{ post && ! Array.isArray(post) && (
+					<div>
+						<a href={ post.link }>
+							{ post.title.rendered }
+						</a>
+						{ post.author }
+					</div>
+				)}
 
 				<ServerSideRender
 					block="devanshi/dynamic-block-example"
