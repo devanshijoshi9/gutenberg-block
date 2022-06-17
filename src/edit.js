@@ -26,7 +26,8 @@ import {
 	PanelRow,
 	ToggleControl,
 	ExternalLink,
-	SelectControl
+	SelectControl,
+	RadioControl
 } from '@wordpress/components';
 
 import ServerSideRender from '@wordpress/server-side-render';
@@ -73,49 +74,53 @@ export default function Edit( { attributes, setAttributes } ) {
 		setAttributes( { backgroundColor: newBackgroundColor } )
 	}
 
-	const allposts = useSelect( ( select ) => {
-		return select( 'core' ).getEntityRecords( 'postType', 'post' );
-	}, [] );
-
-	const [ selectedPost, newSelectedPost ] = useState("all")
+	const [ postOption, setpostOption ]     = useState("all");
+	const [ selectedPost, newSelectedPost ] = useState("1");
+	const [ singlePost, setSinglePost ]     = useState(false);
 	const [ post, setPost ]                 = useState('')
 	const [ error, setError ]               = useState( null );
     const [ isLoaded, setIsLoaded ]         = useState( false );
 
-	// options for SelectControl
-	var options = [];
-		
-	// if posts found
-	if( allposts ) {
-		options.push( { value: 'all', label: 'Select All Post' } );
-		allposts.forEach((post) => {
-			options.push({value:post.id, label:post.title.rendered});
-		});
-	} else {
-		options.push( { value: 0, label: 'Loading...' } )
+	const onChangePostOption = ( newPostOption ) => {
+		setpostOption(newPostOption)
+		if ( newPostOption === "all" ) {
+			setSinglePost(false)
+		} else {
+			setSinglePost(true)
+		}
 	}
 
 	const onChangePost = (changesPost) => {
 
 		newSelectedPost(changesPost)
 
-		if( changesPost === "all" ) {
-			console.log(changesPost)
-			setPost(allposts)
-		} else {
-			console.log('else')
-			console.log(changesPost)
-			apiFetch( { path: `/wp/v2/posts/${ changesPost }` } ).then(
-				( result ) => {
-					setIsLoaded( true );
-					setPost( result );
-				},
-				( error ) => {
-					setIsLoaded( true );
-					setError( error );
-				}
-			);
-		}
+		apiFetch( { path: `/wp/v2/posts/${ changesPost }` } ).then(
+			( result ) => {
+				setIsLoaded( true );
+				setPost( result );
+			},
+			( error ) => {
+				setIsLoaded( true );
+				setError( error );
+			}
+		);
+	}
+	
+	const allposts = useSelect( ( select ) => {
+		return select( 'core' ).getEntityRecords( 'postType', 'post' );
+	}, [] );
+
+	// options for SelectControl
+	var options = [];
+		
+	// if posts found
+	if( allposts ) {
+		options.push( { value: '0', label: 'Select Post' } );
+		allposts.forEach((post) => {
+			options.push({value:post.id, label:post.title.rendered});
+		});
+	} else {
+		options.push( { value: 0, label: 'Loading...' } )
 	}
 
 	return (
@@ -139,12 +144,24 @@ export default function Edit( { attributes, setAttributes } ) {
 				/>
 				<PanelBody title={ __( 'Post Settings', 'gutenberg-block' ) }>
 
-					<SelectControl
-						label="Select Post"
-						value={ selectedPost }
-						options={ options }
-						onChange={ onChangePost }
+					<RadioControl
+						label="Select Option"
+						selected={ postOption }
+						options={ [
+							{ label: 'All Post', value: 'all' },
+							{ label: 'Specific post', value: 'single' },
+						] }
+						onChange={ onChangePostOption }
 					/>
+
+					{ singlePost && (
+						<SelectControl
+							label="Select Post"
+							value={ selectedPost }
+							options={ options }
+							onChange={ onChangePost }
+						/>
+					)}
 				</PanelBody>
 
 			</InspectorControls>
@@ -163,9 +180,9 @@ export default function Edit( { attributes, setAttributes } ) {
 					placeholder={ __( 'Write your text', 'gutenberg-block' ) }
 					style={ { textAlign: attributes.align, backgroundColor: attributes.backgroundColor, color: attributes.textColor } }
 				/>
-				{ post && Array.isArray(post) && (
+				{ ! singlePost && allposts && (
 					<div>
-						{post.map(post => (  
+						{allposts.map(post => (  
 							<ul>
 								<li>  
 									<a href={ post.link }>{ post.title.rendered }</a>
@@ -180,7 +197,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				) }
 				{ error && __('Error:') && error.message }
 				{ ! isLoaded && __('Loading Post') }
-				{ post && ! Array.isArray(post) && (
+				{ post && (
 					<div>
 						<a href={ post.link }>
 							{ post.title.rendered }
