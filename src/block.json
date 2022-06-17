@@ -19,10 +19,13 @@
 		"ID": {
 			"type":"number"
 		},
-		"content": {
+		"postOrder": {
 			"type": "string",
-			"source": "html",
-			"selector": "p"
+			"default": "desc"
+		},
+		"postStatus": {
+			"type": "boolean",
+			"default": "false"
 		},
 		"align": {
 			"type": "string",

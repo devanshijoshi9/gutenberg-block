@@ -72,12 +72,6 @@ function Edit(_ref) {
   } = _ref;
   const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)();
 
-  const onChangeContent = newContent => {
-    setAttributes({
-      content: newContent
-    });
-  };
-
   const onChangeAlign = newAlign => {
     setAttributes({
       align: newAlign === undefined ? 'none' : newAlign
@@ -112,9 +106,22 @@ function Edit(_ref) {
     }
   };
 
+  const onChangePostOrder = newpostOrder => {
+    setAttributes({
+      postOrder: newpostOrder
+    });
+  };
+
   const onChangePost = changesPost => {
     setAttributes({
       ID: changesPost
+    });
+  };
+
+  const onChangePostStatus = newPostStatus => {
+    let status = newPostStatus ? 'Checked' : 'Unchecked';
+    setAttributes({
+      postStatus: newPostStatus
     });
   };
 
@@ -122,7 +129,8 @@ function Edit(_ref) {
     return select('core').getEntityRecords('postType', 'post');
   }, []); // options for SelectControl
 
-  var options = []; // if posts found
+  var options = [];
+  var status = []; // if posts found
 
   if (allposts) {
     options.push({
@@ -142,7 +150,13 @@ function Edit(_ref) {
     });
   }
 
-  console.log(attributes);
+  status.push({
+    value: 'publish',
+    label: 'Publish'
+  }, {
+    value: 'draft',
+    label: 'Draft'
+  });
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "post-information"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", blockProps, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)((_wordpress_server_side_render__WEBPACK_IMPORTED_MODULE_4___default()), {
@@ -166,33 +180,38 @@ function Edit(_ref) {
     label: "Select Option",
     selected: attributes.postOption,
     options: [{
-      label: 'All Post',
+      label: 'Latest Posts',
       value: 'all'
     }, {
       label: 'Specific post',
       value: 'single'
     }],
     onChange: onChangePostOption
+  }), !attributes.singlePost && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.RadioControl, {
+    label: "Select Post Order",
+    selected: attributes.postOrder,
+    options: [{
+      label: 'Ascending',
+      value: 'asc'
+    }, {
+      label: 'Desending',
+      value: 'desc'
+    }],
+    onChange: onChangePostOrder
+  }) && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.CheckboxControl, {
+    label: "Tick to inlucde all post status",
+    help: "Publish, Draft and Future Post ",
+    checked: attributes.postStatus,
+    onChange: onChangePostStatus
   }), attributes.singlePost && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.SelectControl, {
     label: "Select Post",
-    value: attributes.selectedPost,
+    value: attributes.ID,
     options: options,
     onChange: onChangePost
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.BlockControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.AlignmentControl, {
     value: attributes.align,
     onChange: onChangeAlign
-  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.RichText, {
-    tagName: "p",
-    onChange: onChangeContent,
-    allowedFormats: ['core/bold', 'core/italic'],
-    value: attributes.content,
-    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Write your text', 'gutenberg-block'),
-    style: {
-      textAlign: attributes.align,
-      backgroundColor: attributes.backgroundColor,
-      color: attributes.textColor
-    }
-  }));
+  })));
 }
 
 /***/ }),
@@ -409,7 +428,7 @@ module.exports = window["wp"]["serverSideRender"];
   \************************/
 /***/ (function(module) {
 
-module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"devanshi/dynamic-block-example","version":"0.1.0","title":"Dynamic Gutenberg Block","category":"widgets","icon":"smiley","description":"Example","attributes":{"postOption":{"type":"string","default":"all"},"singlePost":{"type":"boolean","default":"false"},"ID":{"type":"number"},"content":{"type":"string","source":"html","selector":"p"},"align":{"type":"string","default":"none"},"backgroundColor":{"type":"string"},"textColor":{"type":"string"}},"keywords":["custom"],"supports":{"html":false,"anchor":true,"align":["left","right","full"],"alignWide":false,"color":{"background":false,"gradients":true,"link":true},"spacing":{"margin":true,"padding":true,"blockGap":true},"typography":{"fontSize":true,"lineHeight":true},"multiple":false,"reusable":false,"lock":false},"textdomain":"gutenberg-block","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css"}');
+module.exports = JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"devanshi/dynamic-block-example","version":"0.1.0","title":"Dynamic Gutenberg Block","category":"widgets","icon":"smiley","description":"Example","attributes":{"postOption":{"type":"string","default":"all"},"singlePost":{"type":"boolean","default":"false"},"ID":{"type":"number"},"postOrder":{"type":"string","default":"desc"},"postStatus":{"type":"boolean","default":"false"},"align":{"type":"string","default":"none"},"backgroundColor":{"type":"string"},"textColor":{"type":"string"}},"keywords":["custom"],"supports":{"html":false,"anchor":true,"align":["left","right","full"],"alignWide":false,"color":{"background":false,"gradients":true,"link":true},"spacing":{"margin":true,"padding":true,"blockGap":true},"typography":{"fontSize":true,"lineHeight":true},"multiple":false,"reusable":false,"lock":false},"textdomain":"gutenberg-block","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css"}');
 
 /***/ })
 

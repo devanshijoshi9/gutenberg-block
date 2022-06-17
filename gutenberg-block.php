@@ -17,7 +17,14 @@
 
 function render_dev_dynamic_block($attributes, $content)
 {
+	if ( $attributes['postStatus'] ) {
+		$status = [ 'publish', 'draft', 'future' ];
+	}
+
 	$args = array(
+		'orderby'     => 'date',
+		'order'       => $attributes['postOrder'],
+		'post_status' => $status ? $status : 'publish',
 		'numberposts' => 10
 	);
 
@@ -30,19 +37,36 @@ function render_dev_dynamic_block($attributes, $content)
 			post_template( $post );
 		}
 	} else {
-		post_template( $attributes );
+		single_post_template( $attributes );
 	}
 
 	return ob_get_clean();
 	
 }
 
-function post_template( $post ) {
-
-	$wrapper_attributes = get_block_wrapper_attributes();
+function single_post_template( $post ) {
 	?>
+	<div>
+		<p>
+			<h3>
+				<b>
+					<a href="<?php echo esc_url(get_permalink($post['ID'])); ?>"> <?php echo esc_html(get_the_title($post['ID'])); ?></a>
+				</b>
+			</h3>
+		</p>
 
-	<div class="<?php $wrapper_attributes ?>">
+		<p>
+			<?php if ( ! empty( has_post_thumbnail( $post['ID'] ) ) ) { ?>
+				<?php echo get_the_post_thumbnail( $post['ID'], 'large' ); ?>
+			<?php } ?>
+		</p>
+	</div>
+	<?php
+}
+
+function post_template( $post ) {
+	?>
+	<div>
 		<p>
 			<h3>
 				<b>
@@ -56,7 +80,6 @@ function post_template( $post ) {
 				<?php echo get_the_post_thumbnail( $post->ID, 'large' ); ?>
 			<?php } ?>
 		</p>
-
 	</div>
 	<?php
 }
