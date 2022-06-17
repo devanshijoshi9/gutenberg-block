@@ -74,36 +74,17 @@ export default function Edit( { attributes, setAttributes } ) {
 		setAttributes( { backgroundColor: newBackgroundColor } )
 	}
 
-	const [ postOption, setpostOption ]     = useState("all");
-	const [ selectedPost, newSelectedPost ] = useState("1");
-	const [ singlePost, setSinglePost ]     = useState(false);
-	const [ post, setPost ]                 = useState('')
-	const [ error, setError ]               = useState( null );
-    const [ isLoaded, setIsLoaded ]         = useState( false );
-
 	const onChangePostOption = ( newPostOption ) => {
-		setpostOption(newPostOption)
+		setAttributes({postOption: newPostOption})
 		if ( newPostOption === "all" ) {
-			setSinglePost(false)
+			setAttributes({singlePost: false})
 		} else {
-			setSinglePost(true)
+			setAttributes({singlePost: true})
 		}
 	}
 
 	const onChangePost = (changesPost) => {
-
-		newSelectedPost(changesPost)
-
-		apiFetch( { path: `/wp/v2/posts/${ changesPost }` } ).then(
-			( result ) => {
-				setIsLoaded( true );
-				setPost( result );
-			},
-			( error ) => {
-				setIsLoaded( true );
-				setError( error );
-			}
-		);
+		setAttributes({ID: changesPost})
 	}
 	
 	const allposts = useSelect( ( select ) => {
@@ -123,8 +104,13 @@ export default function Edit( { attributes, setAttributes } ) {
 		options.push( { value: 0, label: 'Loading...' } )
 	}
 
+	console.log(attributes)
+
 	return (
-		<>
+		<div className='post-information'>
+			<div { ...blockProps }>
+				{ <ServerSideRender block="devanshi/dynamic-block-example" attributes={attributes} /> }
+			</div>
 			<InspectorControls>
 				<PanelColorSettings 
 					title={ __( 'Color settings', 'gutenberg-block' ) }
@@ -146,7 +132,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 					<RadioControl
 						label="Select Option"
-						selected={ postOption }
+						selected={ attributes.postOption }
 						options={ [
 							{ label: 'All Post', value: 'all' },
 							{ label: 'Specific post', value: 'single' },
@@ -154,10 +140,10 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ onChangePostOption }
 					/>
 
-					{ singlePost && (
+					{ attributes.singlePost && (
 						<SelectControl
 							label="Select Post"
-							value={ selectedPost }
+							value={ attributes.selectedPost }
 							options={ options }
 							onChange={ onChangePost }
 						/>
@@ -171,46 +157,14 @@ export default function Edit( { attributes, setAttributes } ) {
 					onChange={ onChangeAlign }
 				/>
 			</BlockControls>
-			<div {...useBlockProps()}>
-				<RichText
-					tagName="p"
-					onChange={ onChangeContent }
-					allowedFormats={ [ 'core/bold', 'core/italic' ] }
-					value={ attributes.content }
-					placeholder={ __( 'Write your text', 'gutenberg-block' ) }
-					style={ { textAlign: attributes.align, backgroundColor: attributes.backgroundColor, color: attributes.textColor } }
-				/>
-				{ ! singlePost && allposts && (
-					<div>
-						{allposts.map(post => (  
-							<ul>
-								<li>  
-									<a href={ post.link }>{ post.title.rendered }</a>
-								</li>
-								<li>
-									{ post.link }
-									{ post.author }
-								</li>
-							</ul>
-						))}
-					</div>
-				) }
-				{ error && __('Error:') && error.message }
-				{ ! isLoaded && __('Loading Post') }
-				{ post && (
-					<div>
-						<a href={ post.link }>
-							{ post.title.rendered }
-						</a>
-						{ post.author }
-					</div>
-				)}
-
-				<ServerSideRender
-					block="devanshi/dynamic-block-example"
-					attributes={ attributes }
-				/>
-			</div>
-		</>	 
+			<RichText
+				tagName="p"
+				onChange={ onChangeContent }
+				allowedFormats={ [ 'core/bold', 'core/italic' ] }
+				value={ attributes.content }
+				placeholder={ __( 'Write your text', 'gutenberg-block' ) }
+				style={ { textAlign: attributes.align, backgroundColor: attributes.backgroundColor, color: attributes.textColor } }
+			/>
+		</div>	 
 	);
 }

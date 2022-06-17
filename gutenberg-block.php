@@ -17,29 +17,48 @@
 
 function render_dev_dynamic_block($attributes, $content)
 {
-	// var_dump($attributes);
-	$recent_posts = wp_get_recent_posts(
-		array(
-			'numberposts' => 1,
-			'post_status' => 'publish',
-		)
+	$args = array(
+		'numberposts' => 10
 	);
 
-	if ( count( $recent_posts ) === 0 ) {
-		return __( 'No posts', 'learn-gutenberg' );
+	$latest_posts = get_posts( $args );
+
+	ob_start();
+
+	if ( $attributes['singlePost'] == false ) {
+		foreach ( $latest_posts as $post ) {
+			post_template( $post );
+		}
+	} else {
+		post_template( $attributes );
 	}
 
-	$post    = $recent_posts[0];
-	$post_id = $post['ID'];
+	return ob_get_clean();
+	
+}
+
+function post_template( $post ) {
 
 	$wrapper_attributes = get_block_wrapper_attributes();
+	?>
 
-	return sprintf(
-		'<div %1$s><a href="%2$s">%3$s</a></div>',
-		$wrapper_attributes,
-		esc_url( get_permalink( $post_id ) ),
-		esc_html( get_the_title( $post_id ) )
-	);
+	<div class="<?php $wrapper_attributes ?>">
+		<p>
+			<h3>
+				<b>
+					<a href="<?php echo esc_url(get_permalink($post->ID)); ?>"> <?php echo esc_html(get_the_title($post->ID)); ?></a>
+				</b>
+			</h3>
+		</p>
+
+		<p>
+			<?php if ( ! empty( has_post_thumbnail( $post->ID ) ) ) { ?>
+				<?php echo get_the_post_thumbnail( $post->ID, 'large' ); ?>
+			<?php } ?>
+		</p>
+
+	</div>
+	<?php
 }
 
 /**

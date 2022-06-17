@@ -8,6 +8,17 @@
 	"icon": "smiley",
 	"description": "Example",
 	"attributes": {
+		"postOption": {
+			"type": "string",
+			"default": "all"
+		},
+		"singlePost": {
+			"type": "boolean",
+			"default": "false"
+		},
+		"ID": {
+			"type":"number"
+		},
 		"content": {
 			"type": "string",
 			"source": "html",
