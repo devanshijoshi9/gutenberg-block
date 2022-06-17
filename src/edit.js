@@ -26,12 +26,16 @@ import {
 	PanelRow,
 	ToggleControl,
 	ExternalLink,
-	SelectControl
+	SelectControl,
+	RadioControl,
+	CheckboxControl
 } from '@wordpress/components';
 
-import { useSelect } from '@wordpress/data';
+import ServerSideRender from '@wordpress/server-side-render';
 
-import { useState } from '@wordpress/element';
+import { useSelect } from '@wordpress/data';
+import apiFetch from '@wordpress/api-fetch';
+import { useState, useEffect } from '@wordpress/element';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -53,10 +57,6 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const blockProps = useBlockProps();
 
-	const onChangeContent = ( newContent ) => {
-		setAttributes( { content: newContent } )
-	}
-
 	const onChangeAlign = ( newAlign ) => {
 		setAttributes( { 
 			align: newAlign === undefined ? 'none' : newAlign, 
@@ -71,20 +71,53 @@ export default function Edit( { attributes, setAttributes } ) {
 		setAttributes( { backgroundColor: newBackgroundColor } )
 	}
 
-	const onChangePostLink = ( newPostLink ) => {
-		setAttributes( { postLink: newPostLink === undefined ? '' : newPostLink } )
-	}
-	
-	const onChangeLinkLabel = ( newLinkLabel ) => {
-		setAttributes( { linkLabel: newLinkLabel === undefined ? '' : newLinkLabel } )
-	}
-	
-	const toggleNofollow = () => {
-		setAttributes( { hasLinkNofollow: ! attributes.hasLinkNofollow } )
+	const onChangePostOption = ( newPostOption ) => {
+		setAttributes({postOption: newPostOption})
+		if ( newPostOption === "all" ) {
+			setAttributes({singlePost: false})
+		} else {
+			setAttributes({singlePost: true})
+		}
 	}
 
+	const onChangePostOrder = ( newpostOrder ) => {
+		setAttributes( { postOrder: newpostOrder } )
+	}
+
+	const onChangePost = (changesPost) => {
+		setAttributes({ID: changesPost})
+	}
+
+	const onChangePostStatus = ( newPostStatus ) => {
+		let status = newPostStatus ? 'Checked' : 'Unchecked' 
+		setAttributes( {postStatus: newPostStatus } )
+	}
+	
+	const allposts = useSelect( ( select ) => {
+		return select( 'core' ).getEntityRecords( 'postType', 'post' );
+	}, [] );
+
+	// options for SelectControl
+	var options = [];
+	var status = [];
+		
+	// if posts found
+	if( allposts ) {
+		options.push( { value: '0', label: 'Select Post' } );
+		allposts.forEach((post) => {
+			options.push({value:post.id, label:post.title.rendered});
+		});
+	} else {
+		options.push( { value: 0, label: 'Loading...' } )
+	}
+
+	status.push( {value: 'publish', label: 'Publish'}, {value: 'draft', label: 'Draft'} )
+
 	return (
-		<>
+		<div className='post-information'>
+			<div { ...blockProps }>
+				{ <ServerSideRender block="devanshi/dynamic-block-example" attributes={attributes} /> }
+			</div>
 			<InspectorControls>
 				<PanelColorSettings 
 					title={ __( 'Color settings', 'gutenberg-block' ) }
@@ -102,45 +135,47 @@ export default function Edit( { attributes, setAttributes } ) {
 						}
 					] }
 				/>
-				<PanelBody 
-					title={ __( 'Link Settings', 'gutenberg-block' )}
-					initialOpen={true}
-				>
-				<PanelRow>
-					<fieldset>
-						<TextControl
-							label={__( 'Affiliate link', 'gutenberg-block' )}
-							value={ attributes.postLink }
-							onChange={ onChangePostLink }
-							help={ __( 'Add your affiliate link', 'gutenberg-block' )}
+				<PanelBody title={ __( 'Post Settings', 'gutenberg-block' ) }>
+
+					<RadioControl
+						label="Select Option"
+						selected={ attributes.postOption }
+						options={ [
+							{ label: 'Latest Posts', value: 'all' },
+							{ label: 'Specific post', value: 'single' },
+						] }
+						onChange={ onChangePostOption }
+					/>
+
+					{ ! attributes.singlePost && (
+						<RadioControl
+							label="Select Post Order"
+							selected={ attributes.postOrder }
+							options={ [
+								{ label: 'Ascending', value: 'asc' },
+								{ label: 'Desending', value: 'desc' },
+							] }
+							onChange={ onChangePostOrder }
 						/>
-					</fieldset>
-				</PanelRow>
-				<PanelRow>
-					<fieldset>
-						<ToggleControl
-							label="Add rel = nofollow"
-							help={
-								attributes.hasLinkNofollow
-									? 'Has rel nofollow.'
-									: 'No rel nofollow.'
-							}
-							checked={ attributes.hasLinkNofollow }
-							onChange={ toggleNofollow }
+					) && (
+						<CheckboxControl
+							label="Tick to inlucde all post status"
+							help="Publish, Draft and Future Post "
+							checked={ attributes.postStatus }
+							onChange={ onChangePostStatus }
 						/>
-					</fieldset>
-				</PanelRow>
-				<PanelRow>
-					<fieldset>
-						<TextControl
-							label={__( 'Link label', 'gutenberg-block' )}
-							value={ attributes.linkLabel }
-							onChange={ onChangeLinkLabel }
-							help={ __( 'Add link label', 'gutenberg-block' )}
+					) }
+
+					{ attributes.singlePost && (
+						<SelectControl
+							label="Select Post"
+							value={ attributes.ID }
+							options={ options }
+							onChange={ onChangePost }
 						/>
-					</fieldset>
-				</PanelRow>
+					)}
 				</PanelBody>
+
 			</InspectorControls>
 			<BlockControls>
 				<AlignmentControl
@@ -148,26 +183,6 @@ export default function Edit( { attributes, setAttributes } ) {
 					onChange={ onChangeAlign }
 				/>
 			</BlockControls>
-			<div>
-				<RichText
-					{ ...blockProps }
-					tagName="p"
-					onChange={ onChangeContent }
-					allowedFormats={ [ 'core/bold', 'core/italic' ] }
-					value={ attributes.content }
-					placeholder={ __( 'Write your text...', 'gutenberg-block' ) }
-					style={ { textAlign: attributes.align, backgroundColor: attributes.backgroundColor, color: attributes.textColor } }
-				/>
-
-				<ExternalLink 
-					href={ attributes.postLink }
-					className="post-link"
-					style={ { textAlign: attributes.align, backgroundColor: attributes.backgroundColor, color: attributes.textColor } }
-					rel={ attributes.hasLinkNofollow ? "nofollow" : "" }
-				>
-						{ attributes.linkLabel }
-				</ExternalLink>
-			</div>
-		</>	 
+		</div>	 
 	);
 }

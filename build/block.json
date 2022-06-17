@@ -1,17 +1,31 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 2,
-	"name": "gutenberg-block/gutenberg-block",
+	"name": "devanshi/dynamic-block-example",
 	"version": "0.1.0",
-	"title": "Gutenberg Block",
+	"title": "Dynamic Gutenberg Block",
 	"category": "widgets",
 	"icon": "smiley",
 	"description": "Example",
 	"attributes": {
-		"content": {
+		"postOption": {
 			"type": "string",
-			"source": "html",
-			"selector": "p"
+			"default": "all"
+		},
+		"singlePost": {
+			"type": "boolean",
+			"default": "false"
+		},
+		"ID": {
+			"type":"number"
+		},
+		"postOrder": {
+			"type": "string",
+			"default": "desc"
+		},
+		"postStatus": {
+			"type": "boolean",
+			"default": "false"
 		},
 		"align": {
 			"type": "string",
@@ -22,18 +36,6 @@
 		},	 
 		"textColor": {
 			"type": "string"
-		},
-		"affiliateLink": {
-			"type": "string",
-			"default": ""
-		},
-		"linkLabel": {
-			"type": "string",
-			"default": "Check it out!"
-		},
-		"hasLinkNofollow": {
-			"type": "boolean",
-			"default": false
 		}
 	},
 	"keywords": ["custom"],

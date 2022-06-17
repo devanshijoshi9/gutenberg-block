@@ -23,24 +23,5 @@ import { useBlockProps, RichText } from '@wordpress/block-editor';
  * @return {WPElement} Element to render.
  */
  export default function save( { attributes } ) {
-	const blockProps = useBlockProps.save();
-	const { content, align, backgroundColor, textColor, affiliateLink, linkLabel, hasLinkNofollow } = attributes;
-	return (
-		<div { ...blockProps }>
-			<RichText.Content 
-				tagName="p" 
-				value={ content } 
-				style={ { textAlign: align, backgroundColor: backgroundColor, color: textColor } }
-			/>
-			<p>
-				<a 
-					href={ affiliateLink }
-					className="affiliate-button"
-					rel={ hasLinkNofollow ? "nofollow" : "noopener noreferrer" }
-				>
-					{ linkLabel }
-				</a>
-			</p>
-		</div>
-	);
+	return null;
 }
