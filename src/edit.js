@@ -34,8 +34,6 @@ import {
 import ServerSideRender from '@wordpress/server-side-render';
 
 import { useSelect } from '@wordpress/data';
-import apiFetch from '@wordpress/api-fetch';
-import { useState, useEffect } from '@wordpress/element';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -99,7 +97,6 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	// options for SelectControl
 	var options = [];
-	var status = [];
 		
 	// if posts found
 	if( allposts ) {
@@ -110,8 +107,6 @@ export default function Edit( { attributes, setAttributes } ) {
 	} else {
 		options.push( { value: 0, label: 'Loading...' } )
 	}
-
-	status.push( {value: 'publish', label: 'Publish'}, {value: 'draft', label: 'Draft'} )
 
 	return (
 		<div className='post-information'>
@@ -175,7 +170,6 @@ export default function Edit( { attributes, setAttributes } ) {
 						/>
 					)}
 				</PanelBody>
-
 			</InspectorControls>
 			<BlockControls>
 				<AlignmentControl

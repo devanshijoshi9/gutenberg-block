@@ -15,6 +15,9 @@
  * @package gutenberg-block
  */
 
+$my_plugin_dir_path = plugin_dir_path( __FILE__ );
+require $my_plugin_dir_path . 'components/post-card/index.php';
+
 function render_dev_dynamic_block($attributes, $content)
 {
 	if ( $attributes['postStatus'] ) {
@@ -34,7 +37,8 @@ function render_dev_dynamic_block($attributes, $content)
 
 	if ( $attributes['singlePost'] == false ) {
 		foreach ( $latest_posts as $post ) {
-			post_template( $post );
+			// echo '<pre>'; print_r($post); echo '</pre>';
+			Movie_template($post);
 		}
 	} else {
 		single_post_template( $attributes );
@@ -58,26 +62,6 @@ function single_post_template( $post ) {
 		<p>
 			<?php if ( ! empty( has_post_thumbnail( $post['ID'] ) ) ) { ?>
 				<?php echo get_the_post_thumbnail( $post['ID'], 'large' ); ?>
-			<?php } ?>
-		</p>
-	</div>
-	<?php
-}
-
-function post_template( $post ) {
-	?>
-	<div>
-		<p>
-			<h3>
-				<b>
-					<a href="<?php echo esc_url(get_permalink($post->ID)); ?>"> <?php echo esc_html(get_the_title($post->ID)); ?></a>
-				</b>
-			</h3>
-		</p>
-
-		<p>
-			<?php if ( ! empty( has_post_thumbnail( $post->ID ) ) ) { ?>
-				<?php echo get_the_post_thumbnail( $post->ID, 'large' ); ?>
 			<?php } ?>
 		</p>
 	</div>

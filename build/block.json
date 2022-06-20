@@ -8,6 +8,9 @@
 	"icon": "smiley",
 	"description": "Example",
 	"attributes": {
+		"value": {
+			"type": "string"
+		},
 		"postOption": {
 			"type": "string",
 			"default": "all"
@@ -17,7 +20,8 @@
 			"default": "false"
 		},
 		"ID": {
-			"type":"number"
+			"type":"number",
+			"default": "1"
 		},
 		"postOrder": {
 			"type": "string",
