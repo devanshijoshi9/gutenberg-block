@@ -28,10 +28,13 @@ import {
 	ExternalLink,
 	SelectControl,
 	RadioControl,
-	CheckboxControl
+	CheckboxControl,
+	RangeControl
 } from '@wordpress/components';
 
 import ServerSideRender from '@wordpress/server-side-render';
+import apiFetch from '@wordpress/api-fetch';
+import { useState } from '@wordpress/element';
 
 import { useSelect } from '@wordpress/data';
 
@@ -41,7 +44,7 @@ import { useSelect } from '@wordpress/data';
  *
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
-import './editor.scss';
+import './components/post-card/style.scss';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -108,6 +111,41 @@ export default function Edit( { attributes, setAttributes } ) {
 		options.push( { value: 0, label: 'Loading...' } )
 	}
 
+	//const [ categories, setCategories ] = useState(['1']);
+
+	// apiFetch( { path: '/wp/v2/categories' } ).then(
+	// 	( category ) => {
+	// 		setCategories( { category } )
+	// 		console.log(categories)
+	// 	}
+	// );
+
+	async function fetch_categories() {
+		const response = await apiFetch( { path:'/wp/v2/categories', } );
+		//const newValue = response[0].value;
+		var categoryOptions = [];
+
+		if( response ) {
+			categoryOptions.push( { value: '0', label: 'Select Category' } );
+			response.forEach((category) => {
+				categoryOptions.push({value:category.id, label:category.name});
+			});
+		} else {
+			categoryOptions.push( { value: 0, label: 'Loading...' } )
+		}
+		return {categoryOptions}
+	}
+
+	const categoriesOption = fetch_categories();
+
+	console.log(categoriesOption)
+
+	const onChangeCategory = ( newCategory ) => {
+		setAttributes( { category: newCategory } )
+	}
+
+	//http://gutenbergblock.local/wp-json/wp/v2/posts?categories=4
+
 	return (
 		<div className='post-information'>
 			<div { ...blockProps }>
@@ -143,22 +181,39 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 
 					{ ! attributes.singlePost && (
-						<RadioControl
-							label="Select Post Order"
-							selected={ attributes.postOrder }
-							options={ [
-								{ label: 'Ascending', value: 'asc' },
-								{ label: 'Desending', value: 'desc' },
-							] }
-							onChange={ onChangePostOrder }
-						/>
-					) && (
-						<CheckboxControl
-							label="Tick to inlucde all post status"
-							help="Publish, Draft and Future Post "
-							checked={ attributes.postStatus }
-							onChange={ onChangePostStatus }
-						/>
+						<>
+							<RadioControl
+								label="Select Post Order"
+								selected={ attributes.postOrder }
+								options={ [
+									{ label: 'Ascending', value: 'asc' },
+									{ label: 'Desending', value: 'desc' },
+								] }
+								onChange={ onChangePostOrder }
+							/>
+
+							<SelectControl
+								label="Select Category"
+								value={ attributes.category }
+								options={ categoriesOption }
+								onChange={ onChangeCategory }
+							/>
+
+							<CheckboxControl
+								label="Tick to include all post status"
+								help="Publish, Draft and Future Post "
+								checked={ attributes.postStatus }
+								onChange={ onChangePostStatus }
+							/>
+
+							<RangeControl
+								label="Posts per Page"
+								value={ attributes.postPerPage }
+								onChange={ ( newPostPerPage ) => setAttributes( { postPerPage: newPostPerPage } ) }
+								min={ 3 }
+								max={ 50 }
+							/>
+						</>
 					) }
 
 					{ attributes.singlePost && (

@@ -15,8 +15,9 @@
  * @package gutenberg-block
  */
 
-$my_plugin_dir_path = plugin_dir_path( __FILE__ );
-require $my_plugin_dir_path . 'components/post-card/index.php';
+define( 'MY_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
+
+require MY_PLUGIN_DIR_PATH . 'src/components/post-card/index.php';
 
 function render_dev_dynamic_block($attributes, $content)
 {
@@ -28,7 +29,7 @@ function render_dev_dynamic_block($attributes, $content)
 		'orderby'     => 'date',
 		'order'       => $attributes['postOrder'],
 		'post_status' => $status ? $status : 'publish',
-		'numberposts' => 10
+		'numberposts' => $attributes['postPerPage']
 	);
 
 	$latest_posts = get_posts( $args );
@@ -45,7 +46,6 @@ function render_dev_dynamic_block($attributes, $content)
 	}
 
 	return ob_get_clean();
-	
 }
 
 function single_post_template( $post ) {
