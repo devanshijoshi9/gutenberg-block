@@ -33,3 +33,6 @@
   - Show all post ( Draft, Publish and Future post)
   - Show post per page based on selected range
 
+#Screenshot
+
+![](../../../../../../../Downloads/post-card-block.png)
