@@ -3,14 +3,21 @@ import { __ } from '@wordpress/i18n';
 import {
 	Placeholder,
 	Button,
+	ToolbarGroup,
+	ToolbarButton
 } from "@wordpress/components";
 
 import {
 	useBlockProps,
-    BlockIcon
+    BlockIcon,
+	BlockControls
 } from "@wordpress/block-editor";
 
-import ServerSideRender from '@wordpress/server-side-render';
+import { useState } from "@wordpress/element";
+
+import { useDispatch } from "@wordpress/data";
+
+import DisabledLoading from './components/disabled-loading/index'
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -24,6 +31,9 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const blockProps = useBlockProps();
 
+	const [loading, setLoading] = useState(false);
+	const { createErrorNotice } = useDispatch("core/notices");
+
 	async function getRandomImage() {
 		try {
 			const apiEndpoint = "https://source.unsplash.com/random";
@@ -36,24 +46,48 @@ export default function Edit( { attributes, setAttributes } ) {
 	}
 
 	const updateImage = async () => {
-		const image = await getRandomImage(); // Our API handler.
-		setAttributes({ src: image }); // Updating the attribute.
+		setLoading(true);
+		try {
+			const image = await getRandomImage();
+			setAttributes({ src: image });
+		} catch (error) {
+			createErrorNotice(
+				__("Something went wrong, Please try again later!", "random-image"),
+				{
+					type: "snackbar",
+				}
+			);
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	const isSourceAvailable = typeof attributes.src !== "undefined";
 
 	return (
-		<div className='post-information'>
+		<div>
+			<BlockControls>
+				<ToolbarGroup>
+					<ToolbarButton
+					showTooltip
+					icon="update-alt"
+					label={__("Try another image", "random-image")}
+				/>
+				</ToolbarGroup>
+			</BlockControls>
 			<div { ...blockProps }>
-				{ <ServerSideRender block="devanshi/post-cards" attributes={attributes} /> }
-				{isSourceAvailable && <img src={attributes.src} />}
+				{isSourceAvailable && (
+					<DisabledLoading isLoading={loading}>
+						<img src={attributes.src} />
+					</DisabledLoading> 
+				)}
 				{!isSourceAvailable && (
 					<Placeholder
 						icon={<BlockIcon icon="format-image" />}
 						label={__("Random image block", "random-image")}
 						instructions={__("Quickly add random placeholder images in your site.","random-image")}
 					>
-						<Button variant="primary" onClick={updateImage}>
+						<Button variant="primary" isBusy={loading} onClick={updateImage}>
 							{__("Create a random image", "random-image")}
 						</Button>
 					</Placeholder>

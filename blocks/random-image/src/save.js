@@ -22,6 +22,13 @@ import { useBlockProps, RichText } from '@wordpress/block-editor';
  *
  * @return {WPElement} Element to render.
  */
- export default function save( { attributes } ) {
-	return null;
+ export default function save( { props } ) {
+
+	const { attributes } = props;
+
+	return (
+		<div className="random-image-block">
+			<img {...useBlockProps.save()} src={attributes.src} />
+		</div>
+	);
 }

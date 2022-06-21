@@ -278,9 +278,6 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
- //import metadata from '../block.json';
-// import Random_Image_Edit from '../blocks/random-image/edit';
-// import Random_Image_Save from '../blocks/random-image/save';
 
 /**
  * Every block starts by registering a new block type definition.
@@ -299,7 +296,6 @@ __webpack_require__.r(__webpack_exports__);
    */
   Post_Card_Save: _save__WEBPACK_IMPORTED_MODULE_3__["default"]
 });
-console.log('hellooooo index');
 
 /***/ }),
 
