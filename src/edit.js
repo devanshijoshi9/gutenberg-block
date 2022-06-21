@@ -111,40 +111,24 @@ export default function Edit( { attributes, setAttributes } ) {
 		options.push( { value: 0, label: 'Loading...' } )
 	}
 
-	//const [ categories, setCategories ] = useState(['1']);
+	const allCategories = useSelect( ( select ) => {
+		return select( 'core' ).getEntityRecords( 'taxonomy', 'category' );
+	}, [] );
 
-	// apiFetch( { path: '/wp/v2/categories' } ).then(
-	// 	( category ) => {
-	// 		setCategories( { category } )
-	// 		console.log(categories)
-	// 	}
-	// );
+	var categoryOptions = [];
 
-	async function fetch_categories() {
-		const response = await apiFetch( { path:'/wp/v2/categories', } );
-		//const newValue = response[0].value;
-		var categoryOptions = [];
-
-		if( response ) {
-			categoryOptions.push( { value: '0', label: 'Select Category' } );
-			response.forEach((category) => {
-				categoryOptions.push({value:category.id, label:category.name});
-			});
-		} else {
-			categoryOptions.push( { value: 0, label: 'Loading...' } )
-		}
-		return {categoryOptions}
+	if( allCategories ) {
+		categoryOptions.push( { value: '0', label: 'Select Category' } );
+		allCategories.forEach((category) => {
+			categoryOptions.push({value:category.id, label:category.name});
+		});
+	} else {
+		categoryOptions.push( { value: 0, label: 'Loading...' } )
 	}
-
-	const categoriesOption = fetch_categories();
-
-	console.log(categoriesOption)
 
 	const onChangeCategory = ( newCategory ) => {
 		setAttributes( { category: newCategory } )
 	}
-
-	//http://gutenbergblock.local/wp-json/wp/v2/posts?categories=4
 
 	return (
 		<div className='post-information'>
@@ -195,7 +179,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							<SelectControl
 								label="Select Category"
 								value={ attributes.category }
-								options={ categoriesOption }
+								options={ categoryOptions }
 								onChange={ onChangeCategory }
 							/>
 

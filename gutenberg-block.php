@@ -27,6 +27,7 @@ function render_dev_dynamic_block($attributes, $content)
 
 	$args = array(
 		'orderby'     => 'date',
+		'category'    => $attributes['category'],
 		'order'       => $attributes['postOrder'],
 		'post_status' => $status ? $status : 'publish',
 		'numberposts' => $attributes['postPerPage']

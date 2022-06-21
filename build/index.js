@@ -147,54 +147,36 @@ function Edit(_ref) {
       value: 0,
       label: 'Loading...'
     });
-  } //const [ categories, setCategories ] = useState(['1']);
-  // apiFetch( { path: '/wp/v2/categories' } ).then(
-  // 	( category ) => {
-  // 		setCategories( { category } )
-  // 		console.log(categories)
-  // 	}
-  // );
-
-
-  async function fetch_categories() {
-    const response = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_5___default()({
-      path: '/wp/v2/categories'
-    }); //const newValue = response[0].value;
-
-    var categoryOptions = [];
-
-    if (response) {
-      categoryOptions.push({
-        value: '0',
-        label: 'Select Category'
-      });
-      response.forEach(category => {
-        categoryOptions.push({
-          value: category.id,
-          label: category.name
-        });
-      });
-    } else {
-      categoryOptions.push({
-        value: 0,
-        label: 'Loading...'
-      });
-    }
-
-    return {
-      categoryOptions
-    };
   }
 
-  const categoriesOption = fetch_categories();
-  console.log(categoriesOption);
+  const allCategories = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_6__.useSelect)(select => {
+    return select('core').getEntityRecords('taxonomy', 'category');
+  }, []);
+  var categoryOptions = [];
+
+  if (allCategories) {
+    categoryOptions.push({
+      value: '0',
+      label: 'Select Category'
+    });
+    allCategories.forEach(category => {
+      categoryOptions.push({
+        value: category.id,
+        label: category.name
+      });
+    });
+  } else {
+    categoryOptions.push({
+      value: 0,
+      label: 'Loading...'
+    });
+  }
 
   const onChangeCategory = newCategory => {
     setAttributes({
       category: newCategory
     });
-  }; //http://gutenbergblock.local/wp-json/wp/v2/posts?categories=4
-
+  };
 
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "post-information"
@@ -240,7 +222,7 @@ function Edit(_ref) {
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.SelectControl, {
     label: "Select Category",
     value: attributes.category,
-    options: categoriesOption,
+    options: categoryOptions,
     onChange: onChangeCategory
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.CheckboxControl, {
     label: "Tick to include all post status",
