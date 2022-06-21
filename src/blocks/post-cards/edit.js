@@ -13,7 +13,6 @@ import { __ } from '@wordpress/i18n';
  */
  import { 
 	useBlockProps, 
-	RichText, 
 	AlignmentControl, 
 	BlockControls,
 	InspectorControls,
@@ -21,11 +20,7 @@ import { __ } from '@wordpress/i18n';
 } from '@wordpress/block-editor';
 
 import {
-	TextControl,
 	PanelBody,
-	PanelRow,
-	ToggleControl,
-	ExternalLink,
 	SelectControl,
 	RadioControl,
 	CheckboxControl,
@@ -33,9 +28,6 @@ import {
 } from '@wordpress/components';
 
 import ServerSideRender from '@wordpress/server-side-render';
-import apiFetch from '@wordpress/api-fetch';
-import { useState } from '@wordpress/element';
-
 import { useSelect } from '@wordpress/data';
 
 /**
@@ -44,7 +36,7 @@ import { useSelect } from '@wordpress/data';
  *
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
-import './components/post-card/style.scss';
+import '../../components/post-card/style.scss';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -133,7 +125,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<div className='post-information'>
 			<div { ...blockProps }>
-				{ <ServerSideRender block="devanshi/dynamic-block-example" attributes={attributes} /> }
+				{ <ServerSideRender block="devanshi/post-cards" attributes={attributes} /> }
 			</div>
 			<InspectorControls>
 				<PanelColorSettings 

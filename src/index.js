@@ -17,22 +17,22 @@ import './style.scss';
 /**
  * Internal dependencies
  */
-import Edit from './edit';
-import save from './save';
-import metadata from './block.json';
+import Post_Card_Edit from './blocks/post-cards/edit';
+import Post_Card_Save from './blocks/post-cards/save';
+// import metadata from './block.json';
 
 /**
  * Every block starts by registering a new block type definition.
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
-registerBlockType(metadata.name, {
+registerBlockType("devanshi/post-cards", {
 	/**
 	 * @see ./edit.js
 	 */
-	edit: Edit,
+	edit: Post_Card_Edit,
 	/**
 	 * @see ./save.js
 	 */
-	save,
+	Post_Card_Save,
 });

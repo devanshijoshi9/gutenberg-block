@@ -22,7 +22,6 @@ function render_post_block($attributes, $content)
 
 	if ( $attributes['singlePost'] == false ) {
 		foreach ( $latest_posts as $post ) {
-			// echo '<pre>'; print_r($post); echo '</pre>';
 			Movie_template($post);
 		}
 	} else {
