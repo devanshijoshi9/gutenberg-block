@@ -2,10 +2,10 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/blocks/post-cards/edit.js":
-/*!***************************************!*\
-  !*** ./src/blocks/post-cards/edit.js ***!
-  \***************************************/
+/***/ "./blocks/random-image/src/edit.js":
+/*!*****************************************!*\
+  !*** ./blocks/random-image/src/edit.js ***!
+  \*****************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -16,40 +16,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
-/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _wordpress_server_side_render__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/server-side-render */ "@wordpress/server-side-render");
 /* harmony import */ var _wordpress_server_side_render__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_server_side_render__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _components_post_card_style_scss__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../components/post-card/style.scss */ "./src/components/post-card/style.scss");
-
-
-/**
- * Retrieves the translation of text.
- *
- * @see https://developer.wordpress.org/block-editor/packages/packages-i18n/
- */
-
-/**
- * React hook that is used to mark the block wrapper element.
- * It provides all the necessary props like the class name.
- *
- * @see https://developer.wordpress.org/block-editor/packages/packages-block-editor/#useBlockProps
- */
 
 
 
-
-
-/**
- * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
- * Those files can contain any CSS code that gets applied to the editor.
- *
- * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
- */
 
 
 /**
@@ -66,190 +41,89 @@ function Edit(_ref) {
     attributes,
     setAttributes
   } = _ref;
-  const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)();
+  const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.useBlockProps)();
 
-  const onChangeAlign = newAlign => {
-    setAttributes({
-      align: newAlign === undefined ? 'none' : newAlign
-    });
-  };
-
-  const onChangeTextColor = newTextColor => {
-    setAttributes({
-      textColor: newTextColor
-    });
-  };
-
-  const onChangeBackgroundColor = newBackgroundColor => {
-    setAttributes({
-      backgroundColor: newBackgroundColor
-    });
-  };
-
-  const onChangePostOption = newPostOption => {
-    setAttributes({
-      postOption: newPostOption
-    });
-
-    if (newPostOption === "all") {
-      setAttributes({
-        singlePost: false
-      });
-    } else {
-      setAttributes({
-        singlePost: true
-      });
+  async function getRandomImage() {
+    try {
+      const apiEndpoint = "https://source.unsplash.com/random";
+      const url = await (await fetch(apiEndpoint)).url;
+      return url;
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
-  };
-
-  const onChangePostOrder = newpostOrder => {
-    setAttributes({
-      postOrder: newpostOrder
-    });
-  };
-
-  const onChangePost = changesPost => {
-    setAttributes({
-      ID: changesPost
-    });
-  };
-
-  const onChangePostStatus = newPostStatus => {
-    let status = newPostStatus ? 'Checked' : 'Unchecked';
-    setAttributes({
-      postStatus: newPostStatus
-    });
-  };
-
-  const allposts = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_5__.useSelect)(select => {
-    return select('core').getEntityRecords('postType', 'post');
-  }, []); // options for SelectControl
-
-  var options = []; // if posts found
-
-  if (allposts) {
-    options.push({
-      value: '0',
-      label: 'Select Post'
-    });
-    allposts.forEach(post => {
-      options.push({
-        value: post.id,
-        label: post.title.rendered
-      });
-    });
-  } else {
-    options.push({
-      value: 0,
-      label: 'Loading...'
-    });
   }
 
-  const allCategories = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_5__.useSelect)(select => {
-    return select('core').getEntityRecords('taxonomy', 'category');
-  }, []);
-  var categoryOptions = [];
+  const updateImage = async () => {
+    const image = await getRandomImage(); // Our API handler.
 
-  if (allCategories) {
-    categoryOptions.push({
-      value: '0',
-      label: 'Select Category'
-    });
-    allCategories.forEach(category => {
-      categoryOptions.push({
-        value: category.id,
-        label: category.name
-      });
-    });
-  } else {
-    categoryOptions.push({
-      value: 0,
-      label: 'Loading...'
-    });
-  }
-
-  const onChangeCategory = newCategory => {
     setAttributes({
-      category: newCategory
-    });
+      src: image
+    }); // Updating the attribute.
   };
 
+  const isSourceAvailable = typeof attributes.src !== "undefined";
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "post-information"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", blockProps, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)((_wordpress_server_side_render__WEBPACK_IMPORTED_MODULE_4___default()), {
     block: "devanshi/post-cards",
     attributes: attributes
-  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InspectorControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.PanelColorSettings, {
-    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Color settings', 'gutenberg-block'),
-    initialOpen: false,
-    colorSettings: [{
-      value: attributes.textColor,
-      onChange: onChangeTextColor,
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Text color', 'gutenberg-block')
-    }, {
-      value: attributes.backgroundColor,
-      onChange: onChangeBackgroundColor,
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Background color', 'gutenberg-block')
-    }]
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelBody, {
-    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Post Settings', 'gutenberg-block')
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.RadioControl, {
-    label: "Select Option",
-    selected: attributes.postOption,
-    options: [{
-      label: 'Latest Posts',
-      value: 'all'
-    }, {
-      label: 'Specific post',
-      value: 'single'
-    }],
-    onChange: onChangePostOption
-  }), !attributes.singlePost && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.RadioControl, {
-    label: "Select Post Order",
-    selected: attributes.postOrder,
-    options: [{
-      label: 'Ascending',
-      value: 'asc'
-    }, {
-      label: 'Desending',
-      value: 'desc'
-    }],
-    onChange: onChangePostOrder
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.SelectControl, {
-    label: "Select Category",
-    value: attributes.category,
-    options: categoryOptions,
-    onChange: onChangeCategory
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.CheckboxControl, {
-    label: "Tick to include all post status",
-    help: "Publish, Draft and Future Post ",
-    checked: attributes.postStatus,
-    onChange: onChangePostStatus
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.RangeControl, {
-    label: "Posts per Page",
-    value: attributes.postPerPage,
-    onChange: newPostPerPage => setAttributes({
-      postPerPage: newPostPerPage
+  }), isSourceAvailable && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    src: attributes.src
+  }), !isSourceAvailable && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Placeholder, {
+    icon: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.BlockIcon, {
+      icon: "format-image"
     }),
-    min: 3,
-    max: 50
-  })), attributes.singlePost && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.SelectControl, {
-    label: "Select Post",
-    value: attributes.ID,
-    options: options,
-    onChange: onChangePost
-  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.BlockControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.AlignmentControl, {
-    value: attributes.align,
-    onChange: onChangeAlign
-  })));
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Random image block", "random-image"),
+    instructions: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Quickly add random placeholder images in your site.", "random-image")
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+    variant: "primary",
+    onClick: updateImage
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Create a random image", "random-image")))));
 }
 
 /***/ }),
 
-/***/ "./src/blocks/post-cards/save.js":
-/*!***************************************!*\
-  !*** ./src/blocks/post-cards/save.js ***!
-  \***************************************/
+/***/ "./blocks/random-image/src/index.js":
+/*!******************************************!*\
+  !*** ./blocks/random-image/src/index.js ***!
+  \******************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/blocks */ "@wordpress/blocks");
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style.scss */ "./blocks/random-image/src/style.scss");
+/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./edit */ "./blocks/random-image/src/edit.js");
+/* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./save */ "./blocks/random-image/src/save.js");
+
+
+
+
+/**
+ * Every block starts by registering a new block type definition.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
+ */
+
+(0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__.registerBlockType)("devanshi/random-image", {
+  /**
+   * @see ./edit.js
+   */
+  edit: _edit__WEBPACK_IMPORTED_MODULE_2__["default"],
+
+  /**
+   * @see ./save.js
+   */
+  Random_Image_Save: _save__WEBPACK_IMPORTED_MODULE_3__["default"]
+});
+
+/***/ }),
+
+/***/ "./blocks/random-image/src/save.js":
+/*!*****************************************!*\
+  !*** ./blocks/random-image/src/save.js ***!
+  \*****************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -293,76 +167,10 @@ function save(_ref) {
 
 /***/ }),
 
-/***/ "./src/index.js":
-/*!**********************!*\
-  !*** ./src/index.js ***!
-  \**********************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/blocks */ "@wordpress/blocks");
-/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style.scss */ "./src/style.scss");
-/* harmony import */ var _blocks_post_cards_edit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./blocks/post-cards/edit */ "./src/blocks/post-cards/edit.js");
-/* harmony import */ var _blocks_post_cards_save__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./blocks/post-cards/save */ "./src/blocks/post-cards/save.js");
-/**
- * Registers a new block provided a unique name and an object defining its behavior.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
- */
-
-/**
- * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
- * All files containing `style` keyword are bundled together. The code used
- * gets applied both to the front of your site and to the editor.
- *
- * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
- */
-
-
-/**
- * Internal dependencies
- */
-
-
- // import metadata from './block.json';
-
-/**
- * Every block starts by registering a new block type definition.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
- */
-
-(0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__.registerBlockType)("devanshi/post-cards", {
-  /**
-   * @see ./edit.js
-   */
-  edit: _blocks_post_cards_edit__WEBPACK_IMPORTED_MODULE_2__["default"],
-
-  /**
-   * @see ./save.js
-   */
-  Post_Card_Save: _blocks_post_cards_save__WEBPACK_IMPORTED_MODULE_3__["default"]
-});
-
-/***/ }),
-
-/***/ "./src/components/post-card/style.scss":
-/*!*********************************************!*\
-  !*** ./src/components/post-card/style.scss ***!
-  \*********************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-// extracted by mini-css-extract-plugin
-
-
-/***/ }),
-
-/***/ "./src/style.scss":
-/*!************************!*\
-  !*** ./src/style.scss ***!
-  \************************/
+/***/ "./blocks/random-image/src/style.scss":
+/*!********************************************!*\
+  !*** ./blocks/random-image/src/style.scss ***!
+  \********************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -398,16 +206,6 @@ module.exports = window["wp"]["blocks"];
 /***/ (function(module) {
 
 module.exports = window["wp"]["components"];
-
-/***/ }),
-
-/***/ "@wordpress/data":
-/*!******************************!*\
-  !*** external ["wp","data"] ***!
-  \******************************/
-/***/ (function(module) {
-
-module.exports = window["wp"]["data"];
 
 /***/ }),
 
@@ -606,7 +404,7 @@ module.exports = window["wp"]["serverSideRender"];
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["./style-index"], function() { return __webpack_require__("./src/index.js"); })
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["./style-index"], function() { return __webpack_require__("./blocks/random-image/src/index.js"); })
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

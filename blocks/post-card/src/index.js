@@ -17,9 +17,8 @@ import './style.scss';
 /**
  * Internal dependencies
  */
-import Post_Card_Edit from './blocks/post-cards/edit';
-import Post_Card_Save from './blocks/post-cards/save';
-// import metadata from './block.json';
+import Post_Card_Edit from './edit';
+import Post_Card_Save from './save';
 
 /**
  * Every block starts by registering a new block type definition.

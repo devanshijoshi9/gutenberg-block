@@ -3,10 +3,10 @@
 	"apiVersion": 2,
 	"name": "devanshi/post-cards",
 	"version": "0.1.0",
-	"title": "Dynamic Post Card Block",
+	"title": "Dynamic Post Card",
 	"category": "widgets",
 	"icon": "smiley",
-	"description": "Example",
+	"description": "Show Posts",
 	"attributes": {
 		"value": {
 			"type": "string"
@@ -75,7 +75,7 @@
 		"lock": false
 	},
 	"textdomain": "gutenberg-block",
-	"editorScript": "file:./index.js",
-	"editorStyle": "file:./index.css",
-	"style": "file:./style-index.css"
+	"editorScript": "file:./build/index.js",
+	"editorStyle": "file:./build/index.css",
+	"style": "file:./build/style-index.css"
 }

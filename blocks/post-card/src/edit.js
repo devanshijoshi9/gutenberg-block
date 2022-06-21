@@ -36,7 +36,7 @@ import { useSelect } from '@wordpress/data';
  *
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
-import '../../components/post-card/style.scss';
+import '../../../components/post-card/style.scss';
 
 /**
  * The edit function describes the structure of your block in the context of the
