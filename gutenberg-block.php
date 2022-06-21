@@ -15,6 +15,10 @@
  * @package gutenberg-block
  */
 
+define( 'MY_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
+
+require MY_PLUGIN_DIR_PATH . 'src/components/post-card/index.php';
+
 function render_dev_dynamic_block($attributes, $content)
 {
 	if ( $attributes['postStatus'] ) {
@@ -23,9 +27,10 @@ function render_dev_dynamic_block($attributes, $content)
 
 	$args = array(
 		'orderby'     => 'date',
+		'category'    => $attributes['category'],
 		'order'       => $attributes['postOrder'],
 		'post_status' => $status ? $status : 'publish',
-		'numberposts' => 10
+		'numberposts' => $attributes['postPerPage']
 	);
 
 	$latest_posts = get_posts( $args );
@@ -34,14 +39,14 @@ function render_dev_dynamic_block($attributes, $content)
 
 	if ( $attributes['singlePost'] == false ) {
 		foreach ( $latest_posts as $post ) {
-			post_template( $post );
+			// echo '<pre>'; print_r($post); echo '</pre>';
+			Movie_template($post);
 		}
 	} else {
 		single_post_template( $attributes );
 	}
 
 	return ob_get_clean();
-	
 }
 
 function single_post_template( $post ) {
@@ -58,26 +63,6 @@ function single_post_template( $post ) {
 		<p>
 			<?php if ( ! empty( has_post_thumbnail( $post['ID'] ) ) ) { ?>
 				<?php echo get_the_post_thumbnail( $post['ID'], 'large' ); ?>
-			<?php } ?>
-		</p>
-	</div>
-	<?php
-}
-
-function post_template( $post ) {
-	?>
-	<div>
-		<p>
-			<h3>
-				<b>
-					<a href="<?php echo esc_url(get_permalink($post->ID)); ?>"> <?php echo esc_html(get_the_title($post->ID)); ?></a>
-				</b>
-			</h3>
-		</p>
-
-		<p>
-			<?php if ( ! empty( has_post_thumbnail( $post->ID ) ) ) { ?>
-				<?php echo get_the_post_thumbnail( $post->ID, 'large' ); ?>
 			<?php } ?>
 		</p>
 	</div>

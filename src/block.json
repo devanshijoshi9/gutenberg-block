@@ -8,6 +8,9 @@
 	"icon": "smiley",
 	"description": "Example",
 	"attributes": {
+		"value": {
+			"type": "string"
+		},
 		"postOption": {
 			"type": "string",
 			"default": "all"
@@ -17,7 +20,8 @@
 			"default": "false"
 		},
 		"ID": {
-			"type":"number"
+			"type":"number",
+			"default": "1"
 		},
 		"postOrder": {
 			"type": "string",
@@ -26,6 +30,14 @@
 		"postStatus": {
 			"type": "boolean",
 			"default": "false"
+		},
+		"postPerPage": {
+			"type": "integer",
+			"default": "10"
+		},
+		"category": {
+			"type": "number",
+			"default": "4"
 		},
 		"align": {
 			"type": "string",

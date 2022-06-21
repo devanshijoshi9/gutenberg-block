@@ -1,0 +1,30 @@
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    border-radius: 5px;
+    transition: 0.3s;
+    width: 40%;
+    background-color: white;
+
+    &:hover {
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    }
+
+    &__container {
+      padding: 2px 16px;
+      color: gray;
+
+      &--title {
+        color: blue;
+        font-size: 24px;
+      }
+    }
+
+    &__image {
+      img {
+        width: -webkit-fill-available;
+        height: -webkit-fill-available;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+      }
+    }
+}
