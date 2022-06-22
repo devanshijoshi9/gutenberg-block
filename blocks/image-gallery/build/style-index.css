@@ -7,10 +7,63 @@
  *
  * Replace them with your own styles or remove the file completely.
  */
-.wp-block-gutenberg-block-gutenberg-block {
-  background-color: #21759b;
-  color: #fff;
-  padding: 2px;
+.image-gallery {
+  overflow: hidden;
+  position: relative;
+}
+.image-gallery .image-gallery-inner-container {
+  display: flex;
+}
+.image-gallery .image-gallery-inner-container[data-direction=left] {
+  -webkit-animation: marquee-left 5s linear infinite;
+          animation: marquee-left 5s linear infinite;
+}
+.image-gallery .image-gallery-inner-container[data-direction=right] {
+  -webkit-animation: marquee-right 5s linear infinite;
+          animation: marquee-right 5s linear infinite;
+}
+.image-gallery .image-gallery-inner-container img {
+  -o-object-fit: cover;
+     object-fit: cover;
+  height: 100%;
+  min-width: 16vw;
+}
+.image-gallery .image-gallery-inner-container img:not(:last-child) {
+  margin-right: 16px;
+}
+
+@-webkit-keyframes marquee-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(calc(-1 * var(--total-container-transform)));
+  }
+}
+
+@keyframes marquee-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(calc(-1 * var(--total-container-transform)));
+  }
+}
+@-webkit-keyframes marquee-right {
+  0% {
+    transform: translateX(calc(-1 * var(--total-container-transform)));
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+@keyframes marquee-right {
+  0% {
+    transform: translateX(calc(-1 * var(--total-container-transform)));
+  }
+  100% {
+    transform: translateX(0%);
+  }
 }
 
 /*# sourceMappingURL=style-index.css.map*/

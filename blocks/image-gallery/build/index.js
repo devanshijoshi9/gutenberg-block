@@ -66,10 +66,45 @@ function Edit(_ref) {
     setAttributes
   } = _ref;
   const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)();
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", blockProps, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.MediaPlaceholder, {
+  const hasImages = attributes.images.length > 0;
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.BlockControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToolbarGroup, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.MediaUploadCheck, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.MediaUpload, {
     multiple: true,
-    gallery: true
-  }));
+    gallery: true,
+    addToGallery: true,
+    onSelect: newImages => setAttributes({
+      images: newImages
+    }),
+    allowedTypes: ["image"],
+    value: attributes.images.map(image => image.id),
+    render: _ref2 => {
+      let {
+        open
+      } = _ref2;
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToolbarButton, {
+        onClick: open
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Edit Gallery", "gutenberg-block"));
+    }
+  })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", blockProps, hasImages && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("figure", {
+    className: "scrollable-gallery-inner-container"
+  }, attributes.images.map((image, index) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    key: index,
+    src: image.url
+  }))), !hasImages && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.MediaPlaceholder, {
+    multiple: true,
+    gallery: true,
+    icon: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.BlockIcon, {
+      icon: "format-gallery"
+    }),
+    labels: {
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Scrollable Image Gallery", "gutenberg-block"),
+      instructions: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Create scrollable image gallery", "gutenberg-block")
+    },
+    onSelect: newImages => {
+      setAttributes({
+        images: newImages
+      });
+    }
+  })));
 }
 
 /***/ }),
@@ -84,8 +119,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/blocks */ "@wordpress/blocks");
 /* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style.scss */ "./blocks/image-gallery/src/style.scss");
-/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./edit */ "./blocks/image-gallery/src/edit.js");
-/* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./save */ "./blocks/image-gallery/src/save.js");
+/* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./editor.scss */ "./blocks/image-gallery/src/editor.scss");
+/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./edit */ "./blocks/image-gallery/src/edit.js");
+/* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./save */ "./blocks/image-gallery/src/save.js");
 /**
  * Registers a new block provided a unique name and an object defining its behavior.
  *
@@ -95,10 +131,12 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * All files containing `style` keyword are bundled together. The code used
- * gets applied both to the front of your site and to the editor.
+ * gets applied both to the front of your site and to the editor. All other files
+ * get applied to the editor only.
  *
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
+
 
 
 /**
@@ -117,14 +155,13 @@ __webpack_require__.r(__webpack_exports__);
   /**
    * @see ./edit.js
    */
-  edit: _edit__WEBPACK_IMPORTED_MODULE_2__["default"],
+  edit: _edit__WEBPACK_IMPORTED_MODULE_3__["default"],
 
   /**
    * @see ./save.js
    */
-  Image_Gallery_Save: _save__WEBPACK_IMPORTED_MODULE_3__["default"]
+  Image_Gallery_Save: _save__WEBPACK_IMPORTED_MODULE_4__["default"]
 });
-console.log('image gallery');
 
 /***/ }),
 
@@ -138,10 +175,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ save)
 /* harmony export */ });
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
-/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__);
+
+
 /**
  * Retrieves the translation of text.
  *
@@ -170,8 +211,40 @@ function save(_ref) {
   let {
     attributes
   } = _ref;
-  return null;
+  alert('hello');
+  console.log(attributes);
+  let blockProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps.save({
+    className: "image-gallery",
+    style: {
+      "--total-container-transform": ((attributes.images.length + 1) * 16).toString().concat("vw")
+    }
+  });
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", blockProps, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("figure", {
+    className: "image-gallery-inner-container",
+    "data-direction": "right"
+  }, attributes.images.map((image, index) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    key: index,
+    src: image.url,
+    "data-mediaid": image.id
+  })), attributes.images.map((image, index) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    className: "duplicate-image",
+    key: index,
+    src: image.url,
+    "data-mediaid": image.id
+  }))));
 }
+
+/***/ }),
+
+/***/ "./blocks/image-gallery/src/editor.scss":
+/*!**********************************************!*\
+  !*** ./blocks/image-gallery/src/editor.scss ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
 
 /***/ }),
 

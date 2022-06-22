@@ -11,7 +11,7 @@ import { __ } from '@wordpress/i18n';
  *
  * @see https://developer.wordpress.org/block-editor/packages/packages-block-editor/#useBlockProps
  */
-import { useBlockProps, RichText } from '@wordpress/block-editor';
+import { useBlockProps } from '@wordpress/block-editor';
 
 /**
  * The save function defines the way in which the different attributes should
@@ -23,5 +23,35 @@ import { useBlockProps, RichText } from '@wordpress/block-editor';
  * @return {WPElement} Element to render.
  */
  export default function save( { attributes } ) {
-	return null;
+
+	alert('hello');
+
+	console.log(attributes)
+	let blockProps = useBlockProps.save({
+		className: "image-gallery",
+		style: {
+			"--total-container-transform": (( attributes.images.length + 1) * 16)
+				.toString()
+				.concat("vw"),
+		},
+	});
+
+	return (
+		<div {...blockProps}>
+			<figure className="image-gallery-inner-container" data-direction="right">
+				{attributes.images.map((image, index) => (
+					<img key={index} src={image.url} data-mediaid={image.id} />
+				))}
+
+				{attributes.images.map((image, index) => (
+					<img
+						className="duplicate-image"
+						key={index}
+						src={image.url}
+						data-mediaid={image.id}
+					/>
+				))}
+			</figure>
+		</div>
+	);
 }

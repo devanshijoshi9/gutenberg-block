@@ -8,6 +8,10 @@
 	"icon": "smiley",
 	"description": "Show Images in gallery view",
 	"attributes": {
+		"images": {
+            "type": "array",
+            "default": []
+		}
 	},
 	"keywords": ["image", "gallery"],
 	"supports": {

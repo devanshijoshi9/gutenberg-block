@@ -30,7 +30,9 @@ import {
 	CheckboxControl,
 	RangeControl,
 	Button,
-	ResponsiveWrapper
+	ResponsiveWrapper,
+	ToolbarButton,
+	ToolbarGroup
 } from '@wordpress/components';
 
 import { Fragment } from '@wordpress/element';
@@ -56,12 +58,50 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const blockProps = useBlockProps();
 
+	const hasImages = attributes.images.length > 0;
+
 	return (
-		<div { ...blockProps }>
-			<MediaPlaceholder
-			multiple
-			gallery
-			/>
-		</div> 
+		<div>
+			<BlockControls>
+				<ToolbarGroup>
+					<MediaUploadCheck>
+						<MediaUpload
+							multiple
+							gallery
+							addToGallery = {true}
+							onSelect = {(newImages) => setAttributes({ images: newImages })}
+							allowedTypes = {["image"]}
+							value = { attributes.images.map((image) => image.id) }
+							render = {({ open }) => (
+								<ToolbarButton onClick={open}>
+									{__("Edit Gallery", "gutenberg-block")}
+								</ToolbarButton>
+							)}
+						/>
+					</MediaUploadCheck>
+				</ToolbarGroup>
+			</BlockControls>
+			<div { ...blockProps }>
+				{hasImages && (
+					<figure className="scrollable-gallery-inner-container">
+						{ attributes.images.map((image, index) => (
+							<img key={index} src={image.url} />
+						))}
+					</figure>
+				)}
+				{ !hasImages && (
+					<MediaPlaceholder
+						multiple
+						gallery
+						icon={<BlockIcon icon="format-gallery" />}
+						labels={{
+							title: __( "Scrollable Image Gallery", "gutenberg-block" ),
+							instructions: __( "Create scrollable image gallery", "gutenberg-block"),
+						}}
+						onSelect= { (newImages) => { setAttributes( { images: newImages } ) } }
+					/>
+				)}
+			</div>
+		</div>
 	);
 }
