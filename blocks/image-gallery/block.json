@@ -1,0 +1,44 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "devanshi/image-gallery",
+	"version": "0.1.0",
+	"title": "Scrollable Image Gallery",
+	"category": "widgets",
+	"icon": "smiley",
+	"description": "Show Images in gallery view",
+	"attributes": {
+		"images": {
+            "type": "array",
+            "default": []
+		}
+	},
+	"keywords": ["image", "gallery"],
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"align": [ "left", "right", "full" ],
+		"alignWide": false,
+		"color": {
+			"background": false,
+			"gradients": true,
+			"link": true
+		},
+		"spacing": {
+			"margin": true,
+			"padding": true,
+			"blockGap": true  
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		},
+		"multiple": false,
+		"reusable": false,
+		"lock": false
+	},
+	"textdomain": "gutenberg-block",
+	"editorScript": "file:./build/index.js",
+	"editorStyle": "file:./build/index.css",
+	"style": "file:./build/style-index.css"
+}

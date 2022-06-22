@@ -18,3 +18,5 @@
 define( 'MY_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
 
 require MY_PLUGIN_DIR_PATH . 'post-card-block.php';
+require MY_PLUGIN_DIR_PATH . 'random-image-block.php';
+require MY_PLUGIN_DIR_PATH . 'image-gallery-block.php';

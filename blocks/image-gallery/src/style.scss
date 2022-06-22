@@ -1,0 +1,67 @@
+/**
+ * The following styles get applied both on the front of your site
+ * and in the editor.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+// .wp-block-devanshi-image-gallery {
+// 	.scrollable-gallery-inner-container {
+// 		display: flex;
+// 		flex-direction: row;
+// 		overflow-x: scroll;
+// 		margin: 0;
+	
+// 		img {
+// 			object-fit: cover;
+// 			&:not(:last-child) {
+// 				margin-right: 16px;
+// 			}
+// 		}
+// 	}
+// }
+
+.image-gallery {
+	overflow: hidden;
+	position: relative;
+
+	.image-gallery-inner-container {
+		display: flex;
+
+		&[data-direction="left"] {
+			animation: marquee-left 5s linear infinite;
+		}
+
+		&[data-direction="right"] {
+			animation: marquee-right 5s linear infinite;
+		}
+
+		img {
+			object-fit: cover;
+			height: 100%;
+			min-width: 16vw;
+			&:not(:last-child) {
+				margin-right: 16px;
+			}
+		}
+	}
+}
+
+@keyframes marquee-left {
+	0% {
+		transform: translateX(0%);
+	}
+	100% {
+		transform: translateX(calc((-1 * var(--total-container-transform))));
+	}
+}
+
+@keyframes marquee-right {
+	0% {
+		transform: translateX(calc(-1 * var(--total-container-transform)));
+	}
+	100% {
+		transform: translateX(0%);
+	}
+}
+

@@ -36,4 +36,3 @@
 #Screenshot
 
 ![post-card-block](https://user-images.githubusercontent.com/86941664/174721768-755050a9-0cbe-49e8-a238-55ca0c4f50f9.png)
-

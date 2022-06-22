@@ -1,0 +1,69 @@
+/*!************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[3].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[3].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[3].use[3]!./blocks/image-gallery/src/style.scss ***!
+  \************************************************************************************************************************************************************************************************************************************************************/
+/**
+ * The following styles get applied both on the front of your site
+ * and in the editor.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+.image-gallery {
+  overflow: hidden;
+  position: relative;
+}
+.image-gallery .image-gallery-inner-container {
+  display: flex;
+}
+.image-gallery .image-gallery-inner-container[data-direction=left] {
+  -webkit-animation: marquee-left 5s linear infinite;
+          animation: marquee-left 5s linear infinite;
+}
+.image-gallery .image-gallery-inner-container[data-direction=right] {
+  -webkit-animation: marquee-right 5s linear infinite;
+          animation: marquee-right 5s linear infinite;
+}
+.image-gallery .image-gallery-inner-container img {
+  -o-object-fit: cover;
+     object-fit: cover;
+  height: 100%;
+  min-width: 16vw;
+}
+.image-gallery .image-gallery-inner-container img:not(:last-child) {
+  margin-right: 16px;
+}
+
+@-webkit-keyframes marquee-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(calc(-1 * var(--total-container-transform)));
+  }
+}
+
+@keyframes marquee-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(calc(-1 * var(--total-container-transform)));
+  }
+}
+@-webkit-keyframes marquee-right {
+  0% {
+    transform: translateX(calc(-1 * var(--total-container-transform)));
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+@keyframes marquee-right {
+  0% {
+    transform: translateX(calc(-1 * var(--total-container-transform)));
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+/*# sourceMappingURL=style-index.css.map*/

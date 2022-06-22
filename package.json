@@ -12,9 +12,18 @@
 		"lint:js": "wp-scripts lint-js",
 		"packages-update": "wp-scripts packages-update",
 		"plugin-zip": "wp-scripts plugin-zip",
-		"start": "wp-scripts start"
+		"start": "wp-scripts start",
+		"start:post-card": "wp-scripts start blocks/post-card/src/index.js --output-path=blocks/post-card/build/",
+		"build:post-card": "wp-scripts build blocks/post-card/src/index.js --output-path=blocks/post-card/build/",
+		"start:random-image": "wp-scripts start blocks/random-image/src/index.js --output-path=blocks/random-image/build/",
+		"build:random-image": "wp-scripts build blocks/random-image/src/index.js --output-path=blocks/random-image/build/",
+		"start:image-gallery": "wp-scripts start blocks/image-gallery/src/index.js --output-path=blocks/image-gallery/build/",
+		"build:image-gallery": "wp-scripts build blocks/image-gallery/src/index.js --output-path=blocks/image-gallery/build/"
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^23.2.0"
+	},
+	"dependencies": {
+		"classnames": "^2.3.1"
 	}
 }

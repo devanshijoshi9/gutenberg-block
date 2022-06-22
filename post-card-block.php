@@ -1,6 +1,6 @@
 <?php
 
-require MY_PLUGIN_DIR_PATH . 'src/components/post-card/index.php';
+require MY_PLUGIN_DIR_PATH . 'components/post-card/index.php';
 
 function render_post_block($attributes, $content)
 {
@@ -22,7 +22,6 @@ function render_post_block($attributes, $content)
 
 	if ( $attributes['singlePost'] == false ) {
 		foreach ( $latest_posts as $post ) {
-			// echo '<pre>'; print_r($post); echo '</pre>';
 			Movie_template($post);
 		}
 	} else {
@@ -62,10 +61,14 @@ function single_post_template( $post ) {
 function post_card_block_init()
 {
 	register_block_type(
-		__DIR__ . '/build',
+		MY_PLUGIN_DIR_PATH . 'blocks/post-card',
 		array(
 			'render_callback' => 'render_post_block',
 		)
 	);
+
+	// register_block_type(
+	// 	MY_PLUGIN_DIR_PATH . 'blocks/random-image'
+	// );
 }
 add_action('init', 'post_card_block_init');
